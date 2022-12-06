@@ -13,7 +13,7 @@ import prefetch from "@astrojs/prefetch";
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'http://localhost:3000',
+  site: 'https://umgefahren.xyz',
   integrations: [mdx(), sitemap(), tailwind(), image({
     serviceEntryPoint: '@astrojs/image/sharp'
   }), prefetch()],
