@@ -1,0 +1,62 @@
+---
+import { Image } from "@astrojs/image/components"
+import githubSvg  from "../assets/github-mark-white.svg"
+import mastodonSvg from  "../assets/mastodon-logo-white.svg";
+import localProfile from "../assets/profile.jpg";
+const socialLinkClass =
+    "relative flex items-center justify-center w-8 h-8 rounded-full bg-gray-600/10 dark:bg-gray-400/10 text-gray-700 dark:text-gray-400 hover:bg-gray-600/15 dark:hover:bg-gray-400/15 hover:text-black dark:hover:text-white transition-colors group";
+const blogLinkClass = "text-gray-300 bg-gray-600 hover:text-gray-200 dark:text-gray-600 dark:bg-gray-300 dark:hover:text-gray-500 p-2 rounded-full"
+---
+
+<header class="w-full h-90 lt-sm:h-80 bg-cover bg-no-repeast border-b-2 border-black dark:border-gray-300 pb-4 mb-4">
+    <div
+        class="max-w-screen-sm h-full px-6 mx-auto flex flex-col items-center justify-center"
+    >
+        <a
+            href="/"
+            class="bg-cover bg-center bg-no-repeat w-25 h-25 border-4 border-white full"
+        >
+            <Image
+                src={localProfile}
+                alt="Profile picture"
+                width={200}
+                height={200}
+            />
+        </a>
+        <h1 class="mt-3 text-4xl text-gray-900 dark:text-gray-100 font-bold">
+            Hannes
+        </h1>
+        <h2 class="mt-2 text-xl text-gray-600 dark:text-gray-300">
+            @umgefahren
+        </h2>
+        <nav class="mt-4 flex gap-2">
+            <a href="https://github.com/umgefahren" class={socialLinkClass}>
+                <img
+                    src={githubSvg}
+                    alt="GitHub Oktocat"
+                    width={20}
+                    height={20}
+                />
+            </a>
+            <a href="https://mastodon.sdf.org/@umgefahren" class={socialLinkClass}>
+                <img
+                    src={mastodonSvg}
+                    alt="Mastodon Logo"
+                    width={20}
+                    height={20}
+                />
+            </a>
+        </nav>
+        <nav class="mt-4 flex gap-2">
+            <a href="/posts" rel="prefetch" class={blogLinkClass}>
+                Posts
+            </a>
+            <a href="/projects" rel="prefetch" class={blogLinkClass}>
+                Projects
+            </a>
+            <a href="/about" rel="prefetch" class={blogLinkClass}>
+                About
+            </a>
+        </nav>
+    </div>
+</header>

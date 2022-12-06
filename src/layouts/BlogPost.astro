@@ -1,0 +1,64 @@
+---
+import BaseHead from "../components/BaseHead.astro"
+import Header from "../components/Header.astro"
+import Footer from "../components/Footer.astro"
+import '@fontsource/jetbrains-mono'
+
+export interface Props {
+	content: {
+		title: string;
+		description: string;
+		pubDate?: string;
+		updatedDate?: string;
+	}
+}
+
+const {
+	content: { title, description, pubDate, updatedDate },
+} = Astro.props
+---
+
+<html lang="en">
+	<head>
+		<BaseHead title={title} description={description} />
+		<style is:global>
+			code {
+				--tw-bg-opacity: 1;
+				background-color: rgb(226 232 240 / var(--tw-bg-opacity));
+			}
+			.astro-code {
+				font-family: "JetBrains Mono", monospace;
+			}
+			@media (prefers-color-scheme: dark) {
+				code {
+					--tw-bg-opacity: 1;
+					background-color: rgb(15 23 42 / var(--tw-bg-opacity));
+				}
+			}
+		</style>
+	</head>
+
+	<body class="bg-slate-200 dark:bg-slate-900">
+		<main class="max-w-screen-sm px-6 pt-8 mx-auto">
+			<Header />
+			<article>
+				<h1 class="text-4xl text-gray-900 dark:text-gray-100 font-bold">
+					{title}
+				</h1>
+				<p class="mt-1 text-gray-500"></p>
+				{
+					pubDate && (
+						<time class=" text-gray-900 dark:text-gray-100">
+							{pubDate}
+						</time>
+					)
+				}
+				<p></p>
+				<div class="text-gray-700 dark:text-gray-300">
+					<slot />
+				</div>
+			</article>
+		</main>
+		<Footer />
+	</body>
+</html>
