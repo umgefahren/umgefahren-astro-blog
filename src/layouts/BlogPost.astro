@@ -1,8 +1,8 @@
 ---
-import BaseHead from "../components/BaseHead.astro"
-import Header from "../components/Header.astro"
-import Footer from "../components/Footer.astro"
-import '@fontsource/jetbrains-mono'
+import BaseHead from "../components/BaseHead.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import "@fontsource/jetbrains-mono";
 
 export interface Props {
 	content: {
@@ -10,12 +10,12 @@ export interface Props {
 		description: string;
 		pubDate?: string;
 		updatedDate?: string;
-	}
+	};
 }
 
 const {
 	content: { title, description, pubDate, updatedDate },
-} = Astro.props
+} = Astro.props;
 ---
 
 <html lang="en">
