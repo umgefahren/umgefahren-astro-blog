@@ -10,6 +10,8 @@ const posts = (await Astro.glob("./posts/*.{md,mdx}")).sort(
 		new Date(b.frontmatter.pubDate).valueOf() -
 		new Date(a.frontmatter.pubDate).valueOf()
 );
+
+console.log(posts)
 ---
 
 <!DOCTYPE html>
@@ -27,10 +29,6 @@ const posts = (await Astro.glob("./posts/*.{md,mdx}")).sort(
 			ul li time {
 				flex: 0 0 130px;
 				font-style: italic;
-				color: #595959;
-			}
-			ul li a:visited {
-				color: #8e32dc;
 			}
 		</style>
 	</head>
@@ -42,7 +40,7 @@ const posts = (await Astro.glob("./posts/*.{md,mdx}")).sort(
 					{
 						posts.map((post) => (
 							<li>
-								<time datetime={post.frontmatter.pubDate}>
+								<time class="text-gray-500/80 dark:text-gray-300/80" datetime={post.frontmatter.pubDate}>
 									{new Date(
 										post.frontmatter.pubDate
 									).toLocaleDateString("en-us", {
@@ -51,7 +49,7 @@ const posts = (await Astro.glob("./posts/*.{md,mdx}")).sort(
 										day: "numeric",
 									})}
 								</time>
-								<a href={post.url} rel="prefetch">
+								<a href={post.url} rel="prefetch" class="text-gray-600 dark:text-gray-200">
 									{post.frontmatter.title}
 								</a>
 							</li>

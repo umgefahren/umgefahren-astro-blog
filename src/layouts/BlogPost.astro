@@ -22,12 +22,20 @@ const {
 	<head>
 		<BaseHead title={title} description={description} />
 		<style is:global>
+			h2 {
+				font-size: 1.5em;
+				margin-top: 0.75em;
+				margin-bottom: 0.25em;
+			}
+
 			code {
 				--tw-bg-opacity: 1;
 				background-color: rgb(226 232 240 / var(--tw-bg-opacity));
 			}
 			.astro-code {
 				font-family: "JetBrains Mono", monospace;
+				margin-top: 0.5em;
+				margin-bottom: 0.;
 			}
 			@media (prefers-color-scheme: dark) {
 				code {
