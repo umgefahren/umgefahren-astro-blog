@@ -2,6 +2,9 @@
 import githubSvg from "../assets/github-mark-white.svg";
 import mastodonSvg from "../assets/mastodon-logo-white.svg";
 import localProfile from "../assets/profile.webp";
+
+console.log(githubSvg)
+
 const socialLinkClass =
     "relative flex items-center justify-center w-8 h-8 rounded-full bg-gray-600/10 dark:bg-gray-400/10 text-gray-700 dark:text-gray-400 hover:bg-gray-600/15 dark:hover:bg-gray-400/15 hover:text-black dark:hover:text-white transition-colors group";
 const blogLinkClass =
@@ -32,7 +35,7 @@ const blogLinkClass =
         <nav class="mt-4 flex gap-2">
             <a href="https://github.com/umgefahren" class={socialLinkClass}>
                 <img
-                    src={githubSvg}
+                    src={githubSvg.src}
                     alt="GitHub Oktocat"
                     width={20}
                     height={20}
@@ -43,7 +46,7 @@ const blogLinkClass =
                 class={socialLinkClass}
             >
                 <img
-                    src={mastodonSvg}
+                    src={mastodonSvg.src}
                     alt="Mastodon Logo"
                     width={20}
                     height={20}
