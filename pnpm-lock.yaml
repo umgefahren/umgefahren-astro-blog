@@ -2,8 +2,8 @@ lockfileVersion: '6.0'
 
 dependencies:
   '@astrojs/image':
-    specifier: ^0.12.0
-    version: 0.12.0(sharp@0.31.2)
+    specifier: ^0.16.3
+    version: 0.16.3(astro@2.1.8)(sharp@0.32.0)
   '@astrojs/mdx':
     specifier: ^0.12.0
     version: 0.12.0(rollup@3.20.2)
@@ -27,13 +27,13 @@ dependencies:
     version: 4.5.11
   astro:
     specifier: ^2.1.8
-    version: 2.1.8(sharp@0.31.2)
+    version: 2.1.8(sharp@0.32.0)
   postcss:
     specifier: ^8.4.21
     version: 8.4.21
   sharp:
-    specifier: ^0.31.2
-    version: 0.31.2
+    specifier: ^0.32.0
+    version: 0.32.0
   svelte:
     specifier: ^3.54.0
     version: 3.57.0
@@ -63,23 +63,23 @@ packages:
     resolution: {integrity: sha512-VxSj3gh/UTB/27rkRCT7SvyGjWtuxUO7Jf7QqDduch7j/gr/uA5P/Q5I/4zIIrZjy2yQAKyKLoox2QI2mM/BSA==}
     dev: false
 
-  /@astrojs/image@0.12.0(sharp@0.31.2):
-    resolution: {integrity: sha512-daX4pKHpOjRDgU4VieXUjrNgxI2NQVif47zihGEycaHUCxbMJr9rtdk6snT8m9+hdyFHTuihiUFsu7TJLFGGdw==}
+  /@astrojs/image@0.16.3(astro@2.1.8)(sharp@0.32.0):
+    resolution: {integrity: sha512-uBs9rKF03jckd0SlNU06PZU8L+WdDCjbvkrsF4QXlArhGExPi5rQi7UVquJFMEQZsVrNxY4mj8M6KBhggXO0Ug==}
     peerDependencies:
+      astro: ^2.1.8
       sharp: '>=0.31.0'
     peerDependenciesMeta:
       sharp:
         optional: true
     dependencies:
       '@altano/tiny-async-pool': 1.0.2
+      astro: 2.1.8(sharp@0.32.0)
       http-cache-semantics: 4.1.0
       image-size: 1.0.2
       kleur: 4.1.5
-      magic-string: 0.25.9
+      magic-string: 0.27.0
       mime: 3.0.0
-      sharp: 0.31.2
-      slash: 4.0.0
-      web-streams-polyfill: 3.2.1
+      sharp: 0.32.0
     dev: false
 
   /@astrojs/language-server@0.28.3:
@@ -106,7 +106,7 @@ packages:
       astro: ^2.1.5
     dependencies:
       '@astrojs/prism': 2.1.1
-      astro: 2.1.8(sharp@0.31.2)
+      astro: 2.1.8(sharp@0.32.0)
       github-slugger: 1.5.0
       import-meta-resolve: 2.2.0
       rehype-raw: 6.1.1
@@ -189,7 +189,7 @@ packages:
       svelte: ^3.54.0
     dependencies:
       '@sveltejs/vite-plugin-svelte': 2.0.3(svelte@3.57.0)(vite@4.2.1)
-      astro: 2.1.8(sharp@0.31.2)
+      astro: 2.1.8(sharp@0.32.0)
       svelte: 3.57.0
       svelte2tsx: 0.5.23(svelte@3.57.0)(typescript@4.9.3)
     transitivePeerDependencies:
@@ -205,7 +205,7 @@ packages:
       tailwindcss: ^3.0.24
     dependencies:
       '@proload/core': 0.3.3
-      astro: 2.1.8(sharp@0.31.2)
+      astro: 2.1.8(sharp@0.32.0)
       autoprefixer: 10.4.13(postcss@8.4.21)
       postcss: 8.4.21
       postcss-load-config: 4.0.1(postcss@8.4.21)
@@ -1047,7 +1047,7 @@ packages:
     hasBin: true
     dev: false
 
-  /astro@2.1.8(sharp@0.31.2):
+  /astro@2.1.8(sharp@0.32.0):
     resolution: {integrity: sha512-4XryaPNUSf6u9rwzd4gd9lX3KpVaann8DesWxIPE3IdhpVjzY0U0wqUjuvkw3DKUbKr4eLbbvJDb4+5h0q623g==}
     engines: {node: '>=16.12.0', npm: '>=6.14.0'}
     hasBin: true
@@ -1097,7 +1097,7 @@ packages:
       rehype: 12.0.1
       semver: 7.3.8
       server-destroy: 1.0.1
-      sharp: 0.31.2
+      sharp: 0.32.0
       shiki: 0.11.1
       slash: 4.0.0
       string-width: 5.1.2
@@ -1751,7 +1751,7 @@ packages:
     dev: false
 
   /github-from-package@0.0.0:
-    resolution: {integrity: sha1-l/tdlr/eiXMxPyDoKI75oWf6ZM4=}
+    resolution: {integrity: sha512-SyHy3T1v2NUXn29OsWdxmK6RwHD+vkj3v8en8AOBZ1wBQ/hCAQ5bAQTD02kW4W9tUp/3Qh6J8r9EvntiyCmOOw==}
     dev: false
 
   /github-slugger@1.5.0:
@@ -2203,12 +2203,6 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       yallist: 4.0.0
-    dev: false
-
-  /magic-string@0.25.9:
-    resolution: {integrity: sha512-RmF0AsMzgt25qzqqLc1+MbHmhdx0ojF2Fvs4XnOqz2ZOBXzzkEwc/dJQZCYHAn7v1jbVOjAZfK8msRn4BxO4VQ==}
-    dependencies:
-      sourcemap-codec: 1.4.8
     dev: false
 
   /magic-string@0.27.0:
@@ -2835,8 +2829,8 @@ packages:
       semver: 7.3.8
     dev: false
 
-  /node-addon-api@5.0.0:
-    resolution: {integrity: sha512-CvkDw2OEnme7ybCykJpVcKH+uAOLV2qLqiyla128dN9TkEWfrYmxG6C2boDe5KcNQqZF3orkqzGgOMvZ/JNekA==}
+  /node-addon-api@6.0.0:
+    resolution: {integrity: sha512-GyHvgPvUXBvAkXa0YvYnhilSB1A+FRYMpIVggKzPZqdaZfevZOuzfWzyvgzOwRLHBeo/MMswmJFsrNF4Nw1pmA==}
     dev: false
 
   /node-releases@2.0.6:
@@ -3445,14 +3439,14 @@ packages:
     resolution: {integrity: sha512-rb+9B5YBIEzYcD6x2VKidaa+cqYBJQKnU4oe4E3ANwRRN56yk/ua1YCJT1n21NTS8w6CcOclAKNP3PhdCXKYtQ==}
     dev: false
 
-  /sharp@0.31.2:
-    resolution: {integrity: sha512-DUdNVEXgS5A97cTagSLIIp8dUZ/lZtk78iNVZgHdHbx1qnQR7JAHY0BnXnwwH39Iw+VKhO08CTYhIg0p98vQ5Q==}
+  /sharp@0.32.0:
+    resolution: {integrity: sha512-yLAypVcqj1toSAqRSwbs86nEzfyZVDYqjuUX8grhFpeij0DDNagKJXELS/auegDBRDg1XBtELdOGfo2X1cCpeA==}
     engines: {node: '>=14.15.0'}
     requiresBuild: true
     dependencies:
       color: 4.2.3
       detect-libc: 2.0.1
-      node-addon-api: 5.0.0
+      node-addon-api: 6.0.0
       prebuild-install: 7.1.1
       semver: 7.3.8
       simple-get: 4.0.1
@@ -3530,11 +3524,6 @@ packages:
   /source-map@0.7.4:
     resolution: {integrity: sha512-l3BikUxvPOcn5E74dZiq5BGsTb5yEwhaTSzccU6t4sDOH8NWJCstKO5QT2CvtFoK6F0saL7p9xHAqHOlCPJygA==}
     engines: {node: '>= 8'}
-    dev: false
-
-  /sourcemap-codec@1.4.8:
-    resolution: {integrity: sha512-9NykojV5Uih4lgo5So5dtw+f0JgJX30KCNI8gwhz2J9A15wD0Ml6tjHKwf6fTSa6fAdVBdZeNOs9eJ71qCk8vA==}
-    deprecated: Please use @jridgewell/sourcemap-codec instead
     dev: false
 
   /space-separated-tokens@2.0.2:
@@ -4081,11 +4070,6 @@ packages:
 
   /web-namespaces@2.0.1:
     resolution: {integrity: sha512-bKr1DkiNa2krS7qxNtdrtHAmzuYGFQLiQ13TsorsdT6ULTkPLKuu5+GsFpDlg6JFjUTwX2DyhMPG2be8uPrqsQ==}
-    dev: false
-
-  /web-streams-polyfill@3.2.1:
-    resolution: {integrity: sha512-e0MO3wdXWKrLbL0DgGnUV7WHVuw9OUvL4hjgnPkIeEvESk74gAITi5G606JtZPp39cd8HA9VQzCIvA49LpPN5Q==}
-    engines: {node: '>= 8'}
     dev: false
 
   /which-pm-runs@1.1.0:
