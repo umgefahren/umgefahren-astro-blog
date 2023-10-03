@@ -1,0 +1,64 @@
+---
+import BaseHead from "../components/BaseHead.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { SITE_TITLE, SITE_DESCRIPTION } from "../config";
+import { getCollection } from "astro:content";
+
+const travels = (await getCollection("travel")).sort((a, b) => {
+  return b.data.pubDate.valueOf() - a.data.pubDate.valueOf();
+});
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+    <style>
+      ul {
+        list-style-type: none;
+        padding: unset;
+      }
+      ul li {
+        display: flex;
+      }
+      ul li time {
+        flex: 0 0 130px;
+        font-style: italic;
+      }
+    </style>
+  </head>
+  <body class="bg-slate-200 dark:bg-slate-900">
+    <Header />
+    <main>
+      <section>
+        <ul>
+          {
+            travels.map((post) => (
+              <li>
+                <time
+                  class="text-gray-500/80 dark:text-gray-300/80"
+                  datetime={post.data.pubDate.toDateString()}
+                >
+                  {new Date(post.data.pubDate).toLocaleDateString("en-us", {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                  })}
+                </time>
+                <a
+                  href={`/travel/${post.slug}`}
+                  rel="prefetch"
+                  class="text-gray-600 dark:text-gray-200"
+                >
+                  {post.data.title}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+    </main>
+    <Footer />
+  </body>
+</html>

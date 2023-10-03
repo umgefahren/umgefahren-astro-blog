@@ -6,6 +6,7 @@ const travelCollection = defineCollection({
         title: z.string(),
         tags: z.array(z.string()),
         image: z.string().optional(),
+        pubDate: z.date(),
     })
 })
 
