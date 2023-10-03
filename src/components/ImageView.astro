@@ -1,0 +1,218 @@
+---
+import { ExifTool, type Tags } from "exiftool-vendored";
+import { Picture } from "astro-imagetools/components";
+
+export interface Props {
+  image: ImageMetadata;
+  alt: string;
+}
+
+const { image, alt } = Astro.props;
+
+console.log(image);
+
+let path = "";
+if (image.src.startsWith("/_astro/")) {
+  path = `../..${image.src}`;
+} else if (image.src.startsWith("/assets")) {
+  path = `./dist${image.src}`;
+} else {
+  const REGEXP = /\/@fs(.*)\?.*/;
+  path = REGEXP.exec(image.src)![1]!;
+}
+
+const reader = new ExifTool();
+const tags = await reader.read(path);
+await reader.end();
+
+interface ExifData {
+  camera?: string;
+  lens?: string;
+  aperture?: number;
+  shutterSpeed?: string;
+  iso?: number;
+  focalLength?: string;
+}
+
+function extractData(tags: Tags): ExifData {
+  let ret: ExifData = {
+    camera: tags.Model,
+    lens: tags.LensID,
+    aperture: tags.Aperture,
+    shutterSpeed: tags.ShutterSpeed,
+    iso: tags.ISO,
+    focalLength: tags.FocalLength,
+  };
+  return ret;
+}
+
+const exifData = extractData(tags);
+---
+
+<style>
+  .container {
+    position: relative;
+    overflow: hidden;
+    color: #000;
+  }
+
+  .exif {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    transform: translateY(100%);
+    transition: transform 0.3s ease-in-out;
+    opacity: 0;
+    background-color: #fff; /* Change as needed */
+    border-radius: 1rem 0 0 0;
+    font-size: small;
+  }
+
+  .image {
+    transition: filter 0.3s ease-in-out;
+    pointer-events: none;
+  }
+
+  .container:hover:not(:fullscreen) .exif {
+    transform: translateY(0);
+    opacity: 0.75;
+  }
+
+  .container:hover:not(:fullscreen) > .image {
+    filter: blur(5px) brightness(0.75) grayscale(100%);
+  }
+
+  .container > .exif > table {
+    /* A table with black lines and rounded corners and a border around all cells */
+    border: 2px solid #000;
+    border-radius: 5px;
+    border-collapse: separate;
+    border-spacing: 0;
+
+    margin: 0.5rem;
+  }
+
+  .container > .exif > table td {
+    /* A cell with padding and a black bottom border */
+    padding: 5px;
+    border: 1px solid #000;
+  }
+
+  .container > .exif > h3 {
+    padding: 0.75rem;
+    font-size: larger;
+  }
+
+  .subtitle {
+    margin-bottom: 1rem;
+  }
+
+  .subtitle h3 {
+    font-size: larger;
+  }
+</style>
+
+<div>
+  <div class="container">
+    <div class="image">
+      <Picture
+        src={path}
+        alt={alt}
+        placeholder="blurred"
+        format={["heif", "avif", "webp"]}
+        fallbackFormat="jpg"
+        includeSourceFormat={false}
+        w={image.width}
+        h={image.height}
+        formatOptions={{
+          heif: {
+            quality: 90,
+            depth: 12,
+          },
+          avif: {
+            quailty: 90,
+            depth: 12,
+          },
+          webp: {
+            quality: 85,
+          },
+        }}
+      />
+    </div>
+    <div class="exif">
+      <table>
+        {
+          exifData.camera && (
+            <tr>
+              <td>Camera</td>
+              <td>{exifData.camera}</td>
+            </tr>
+          )
+        }
+        {
+          exifData.lens && (
+            <tr>
+              <td>Lens</td>
+              <td>{exifData.lens}</td>
+            </tr>
+          )
+        }
+  
+        {
+          exifData.aperture && (
+            <tr>
+              <td>Aperture</td>
+              <td>f {exifData.aperture}</td>
+            </tr>
+          )
+        }
+  
+        {
+          exifData.shutterSpeed && (
+            <tr>
+              <td>Shutter Speed</td>
+              <td>{exifData.shutterSpeed}</td>
+            </tr>
+          )
+        }
+  
+        {
+          exifData.iso && (
+            <tr>
+              <td>ISO</td>
+              <td>{exifData.iso}</td>
+            </tr>
+          )
+        }
+  
+        {
+          exifData.focalLength && (
+            <tr>
+              <td>Focal Length</td>
+              <td>{exifData.focalLength}</td>
+            </tr>
+          )
+        }
+      </table>
+    </div>
+  </div>
+  
+  <h3>{alt}</h3>
+</div>
+
+<script>
+  const containers = document.getElementsByClassName("container");
+  for (let i = 0; i < containers.length; i++) {
+    const container = containers[i];
+    container.addEventListener("click", async (_) => {
+      await container.requestFullscreen();
+      container.addEventListener("keydown", (e) => {
+        const event = e as KeyboardEvent;
+        if (event.key === "Escape") {
+          document.exitFullscreen();
+        }
+      });
+    });
+  }
+  const container = document.getElementById("container");
+</script>

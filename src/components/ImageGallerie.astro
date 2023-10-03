@@ -1,0 +1,40 @@
+---
+import ImageView from "./ImageView.astro";
+export interface Props {
+  images: {
+    image: ImageMetadata;
+    alt: string;
+  }[];
+}
+
+const { images } = Astro.props;
+---
+
+<style>
+
+  @media (min-width: 1024px) {
+    .my-carousel:not(:fullscreen) {
+      @apply carousel carousel-center  max-w-screen-lg; 
+    }
+
+    .my-carousel:not(:fullscreen) div.item {
+      @apply carousel-item;
+    }
+  }
+
+  .my-carousel {
+    margin-bottom: 1rem;
+  }
+</style>
+
+<div class="my-carousel">
+  {
+    images.map(({ image, alt }) => (
+      <div class="item">
+        <div class="itemcontent">
+        <ImageView image={image} alt={alt} />
+        </div>
+      </div>
+    ))
+  }
+</div>

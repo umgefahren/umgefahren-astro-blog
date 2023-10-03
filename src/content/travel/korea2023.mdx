@@ -1,0 +1,48 @@
+---
+layout: ../../layouts/BlogPost.astro
+title: Korea 2023 - First Impressions
+tags: ["korea", "travel", "asia", "first-impressions"]
+---
+
+import ImageGallerie from "../../components/ImageGallerie.astro";
+import ImageView from "../../components/ImageView.astro";
+
+import Gyeongbokgung from "./korea2023imgs/gyeongbokgung.webp";
+import NamsanStream from "./korea2023imgs/namsanstream.webp";
+import Temple from "./korea2023imgs/temple.webp";
+import StudentParty from "./korea2023imgs/studentparty.webp";
+import BigCity from "./korea2023imgs/bigcity.webp";
+
+## Seoul
+
+<ImageGallerie
+  images={[
+    {
+      image: Gyeongbokgung,
+      alt: "Gyeongbokgung Palace",
+    },
+    {
+        image: Temple,
+        alt: "Big buddhist temple"
+    },
+    {
+        image: StudentParty,
+        alt: "Student Party by students of the Korea University after a victory over the University of Seoul"
+    },
+    {
+        image: BigCity,
+        alt: "View of Seoul at Night"
+    }
+  ]}
+/>
+
+<ImageView 
+  image={NamsanStream}
+  alt="Namsan Stream"
+/>
+
+Those where the pictures from Seoul.
+
+import SquidFishing from "./korea2023imgs/squidfishing.webp";
+import JejuTown from "./korea2023imgs/jejutown.webp";
+import JejuBeauty from "./korea2023imgs/jejubeauty.webp";

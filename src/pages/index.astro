@@ -5,38 +5,38 @@ import Footer from "../components/Footer.astro";
 import { SITE_TITLE, SITE_DESCRIPTION } from "../config";
 
 const posts = (await Astro.glob("./posts/*.{md,mdx}")).sort(
-	(a, b) =>
-		new Date(b.frontmatter.pubDate).valueOf() -
-		new Date(a.frontmatter.pubDate).valueOf()
+  (a, b) =>
+    new Date(b.frontmatter.pubDate).valueOf() -
+    new Date(a.frontmatter.pubDate).valueOf()
 );
 ---
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-	</head>
-	<body class="bg-slate-200 dark:bg-slate-900">
-		<IndexHeader />
-		<main class="max-w-screen-sm px-6 mx-auto">
-			{
-				posts.map((post) => (
-					<div class="pt-12">
-						<a href={post.url}>
-							<h3 class="text-2xl font-bold text-gray-800 dark:text-gray-200 hover:text-gray-600 hover:dark:text-gray-300">
-								{post.frontmatter.title}
-							</h3>
-						</a>
-						<p class="text-gray-700">
-							<time>{post.frontmatter.pubDate}</time>
-						</p>
-						<p class="mt-3 text-gray-700 dark:text-gray-400">
-							{post.frontmatter.description}
-						</p>
-					</div>
-				))
-			}
-		</main>
-		<Footer />
-	</body>
+  <head>
+    <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+  </head>
+  <body class="bg-slate-200 dark:bg-slate-900">
+    <IndexHeader />
+    <main class="max-w-screen-sm px-6 mx-auto">
+      {
+        posts.map((post) => (
+          <div class="pt-12">
+            <a href={post.url}>
+              <h3 class="text-2xl font-bold text-gray-800 dark:text-gray-200 hover:text-gray-600 hover:dark:text-gray-300">
+                {post.frontmatter.title}
+              </h3>
+            </a>
+            <p class="text-gray-700">
+              <time>{post.frontmatter.pubDate}</time>
+            </p>
+            <p class="mt-3 text-gray-700 dark:text-gray-400">
+              {post.frontmatter.description}
+            </p>
+          </div>
+        ))
+      }
+    </main>
+    <Footer />
+  </body>
 </html>
