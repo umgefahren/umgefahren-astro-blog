@@ -10,3 +10,5 @@ src/content/travel/korea2023imgs/jejutown.webp filter=lfs diff=lfs merge=lfs -te
 src/content/travel/korea2023imgs/squidfishing.webp filter=lfs diff=lfs merge=lfs -text
 src/content/travel/korea2023imgs/studentparty.webp filter=lfs diff=lfs merge=lfs -text
 src/content/travel/korea2023imgs/temple.webp filter=lfs diff=lfs merge=lfs -text
+*.jpg filter=lfs diff=lfs merge=lfs -text
+*.jpeg filter=lfs diff=lfs merge=lfs -text

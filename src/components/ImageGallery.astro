@@ -10,15 +10,14 @@ export interface Props {
 const { images } = Astro.props;
 ---
 
-<style>
-
+<style lang="postcss">
   @media (min-width: 1024px) {
     .my-carousel:not(:fullscreen) {
       @apply carousel carousel-center  max-w-screen-lg; 
     }
 
     .my-carousel:not(:fullscreen) div.item {
-      @apply carousel-item;
+      @apply carousel-item w-full;
     }
   }
 

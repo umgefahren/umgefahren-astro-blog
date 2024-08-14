@@ -1,0 +1,53 @@
+---
+export interface Props {
+  hangul: string;
+  roman: string;
+}
+const { hangul, roman } = Astro.props;
+const longest = hangul.length > roman.length ? hangul : roman;
+---
+
+<span class="fading-text" data-longest={longest}>
+  <span class="text romanized">{roman}</span>
+  <span class="text hangul">{hangul}</span>
+</span>
+
+<style>
+  .fading-text {
+    display: inline-block;
+    position: relative;
+    vertical-align: baseline;
+  }
+
+  .text {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: opacity 0.5s ease;
+    white-space: nowrap;
+  }
+
+  .romanized {
+    opacity: 1;
+  }
+
+  .hangul {
+    opacity: 0;
+  }
+
+  .fading-text:hover .romanized {
+    opacity: 0;
+  }
+
+  .fading-text:hover .hangul {
+    opacity: 1;
+  }
+
+  /* Ensure the container is wide enough for the larger text */
+  .fading-text::before {
+    content: attr(data-longest);
+    visibility: hidden;
+    display: block;
+    height: 0;
+  }
+</style>

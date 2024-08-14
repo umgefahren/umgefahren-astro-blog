@@ -1,0 +1,106 @@
+---
+import type { MarkdownLayoutProps } from "astro";
+import BaseHead from "../components/BaseHead.astro";
+import Footer from "../components/Footer.astro";
+import Header from "../components/Header.astro";
+
+type Props = MarkdownLayoutProps<{
+  title: string;
+  summary: string;
+  date: Date;
+}>;
+
+const { frontmatter } = Astro.props;
+---
+
+<html>
+  <head>
+    <BaseHead title={frontmatter.title} description={frontmatter.summary} />
+    <style is:global>
+      .markdown > h1,
+      .markdown > h2,
+      .markdown > h3,
+      .markdown > h4,
+      .markdown > h5,
+      .markdown > h6 {
+        margin-top: 0.75em;
+        margin-bottom: 0.25em;
+      }
+      .markdown > h1:not(article > h1) {
+        font-size: 2em;
+      }
+
+      .markdown > h1:not(article > h1)::before {
+        content: "#";
+        margin-right: 0.5em;
+      }
+
+      .markdown > h2 {
+        font-size: 1.5em;
+      }
+
+      .markdown > h2::before {
+        content: "##";
+        margin-right: 0.5em;
+      }
+
+      .markdown > h3 {
+        font-size: 1.25em;
+      }
+
+      .markdown > h3::before {
+        content: "###";
+        margin-right: 0.5em;
+      }
+
+      .markdown > h4 {
+        font-size: 1em;
+      }
+
+      .markdown > h4::before {
+        content: "####";
+        margin-right: 0.5em;
+      }
+
+      .markdown > ul {
+        list-style-position: inside;
+        list-style-type: disc;
+      }
+
+      .markdown > p {
+        margin-top: 0.75em;
+        margin-bottom: 0.75em;
+      }
+    </style>
+  </head>
+  <body class="bg-slate-200 dark:bg-slate-900">
+    <main
+      class="2xl:max-w-screen-2xl lg:max-w-screen-lg md:max-w-screen-sm px-2 pt-8 mx-auto"
+    >
+      <Header />
+      <article class="mb-10">
+        <h1 class="text-4xl text-gray-900 dark:text-gray-100 font-bold">
+          {frontmatter.title}
+        </h1>
+        <p class="mt-1 text-gray-500"></p>
+        {
+          frontmatter.date && (
+            <time class=" text-gray-900 dark:text-gray-100">
+              {new Date(frontmatter.date).toDateString()}
+            </time>
+          )
+        }
+        <p></p>
+        <div class="text-gray-700 dark:text-gray-300 markdown">
+          <slot />
+        </div>
+      </article>
+    </main>
+    <Footer />
+    <script defer is:inline>
+      document.querySelectorAll(".markdown a[href*=wikipedia]").forEach((element) => {
+        element.setAttribute('target', '_blank')
+      })
+    </script>
+  </body>
+</html>

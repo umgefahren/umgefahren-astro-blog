@@ -5,9 +5,13 @@ import { Picture } from "astro-imagetools/components";
 export interface Props {
   image: ImageMetadata;
   alt: string;
+  height?: number;
+  width?: number;
 }
 
-const { image, alt } = Astro.props;
+const { image, alt, height, width } = Astro.props;
+
+const elementId = crypto.randomUUID();
 
 console.log(image);
 
@@ -32,6 +36,8 @@ interface ExifData {
   shutterSpeed?: string;
   iso?: number;
   focalLength?: string;
+  height: number;
+  width: number;
 }
 
 function extractData(tags: Tags): ExifData {
@@ -42,6 +48,8 @@ function extractData(tags: Tags): ExifData {
     shutterSpeed: tags.ShutterSpeed,
     iso: tags.ISO,
     focalLength: tags.FocalLength,
+    height: image.height,
+    width: image.width,
   };
   return ret;
 }
@@ -78,9 +86,6 @@ const exifData = extractData(tags);
     opacity: 0.75;
   }
 
-  .container:hover:not(:fullscreen) > .image {
-    filter: blur(5px) brightness(0.75) grayscale(100%);
-  }
 
   .container > .exif > table {
     /* A table with black lines and rounded corners and a border around all cells */
@@ -112,18 +117,21 @@ const exifData = extractData(tags);
   }
 </style>
 
-<div>
-  <div class="container">
+<image-container data-elementid={elementId}>
+  <div class="container" id={elementId}>
     <div class="image">
       <Picture
         src={path}
         alt={alt}
-        placeholder="blurred"
+        placeholder="tracedSvg"
         format={["heif", "avif", "webp"]}
         fallbackFormat="jpg"
         includeSourceFormat={false}
-        w={image.width}
-        h={image.height}
+        w={width ?? image.width}
+        h={height ?? image.height}
+        breakpoints={{
+          maxWidth: width ?? image.width,
+        }}
         formatOptions={{
           heif: {
             quality: 90,
@@ -154,7 +162,7 @@ const exifData = extractData(tags);
             </tr>
           )
         }
-  
+
         {
           exifData.aperture && (
             <tr>
@@ -163,7 +171,7 @@ const exifData = extractData(tags);
             </tr>
           )
         }
-  
+
         {
           exifData.shutterSpeed && (
             <tr>
@@ -172,7 +180,7 @@ const exifData = extractData(tags);
             </tr>
           )
         }
-  
+
         {
           exifData.iso && (
             <tr>
@@ -181,7 +189,7 @@ const exifData = extractData(tags);
             </tr>
           )
         }
-  
+
         {
           exifData.focalLength && (
             <tr>
@@ -190,25 +198,39 @@ const exifData = extractData(tags);
             </tr>
           )
         }
+
+        <tr>
+          <td>Height</td>
+          <td>{exifData.height}</td>
+        </tr>
+
+        <tr>
+          <td>Width</td>
+          <td>{exifData.width}</td>
+        </tr>
       </table>
     </div>
   </div>
-  
-  <h3>{alt}</h3>
-</div>
+  {alt}
+</image-container>
 
 <script>
-  const containers = document.getElementsByClassName("container");
-  for (let i = 0; i < containers.length; i++) {
-    const container = containers[i];
-    container.addEventListener("click", async (_) => {
-      await container.requestFullscreen();
-      container.addEventListener("keydown", (e) => {
-        const event = e as KeyboardEvent;
-        if (event.key === "Escape") {
-          document.exitFullscreen();
-        }
+  class ImageContainer extends HTMLElement {
+    constructor() {
+      super();
+      const container = document.getElementById(
+        this.dataset.elementid!
+      ) as HTMLDivElement;
+      container.addEventListener("click", async (_) => {
+        await container.requestFullscreen();
+        container.addEventListener("keydown", (e) => {
+          const event = e as KeyboardEvent;
+          if (event.key === "Escape") {
+            document.exitFullscreen();
+          }
+        });
       });
-    });
+    }
   }
+  customElements.define("image-container", ImageContainer);
 </script>

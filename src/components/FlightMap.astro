@@ -1,0 +1,147 @@
+---
+import airports from "airport-codes";
+import { distance } from "@turf/distance";
+import { point } from "@turf/helpers";
+export interface Props {
+  start: string;
+  end: string;
+}
+
+const { start, end } = Astro.props;
+
+const elementId = crypto.randomUUID();
+const startAirport = airports.findWhere({ iata: start });
+const startAirportPosition = [
+  startAirport.get("latitude"),
+  startAirport.get("longitude"),
+];
+const endAirport = airports.findWhere({ iata: end });
+const endAirportPosition = [
+  endAirport.get("latitude"),
+  endAirport.get("longitude"),
+];
+const dist = distance(point(startAirportPosition), point(endAirportPosition));
+---
+
+<flight-map
+  data-elementid={elementId}
+  data-startlat={startAirportPosition[0]}
+  data-startlng={startAirportPosition[1]}
+  data-endlat={endAirportPosition[0]}
+  data-endlng={endAirportPosition[1]}
+>
+  <div class="map-container">
+    <div id={elementId}/>
+    <div class="distance-container">
+        <pre>
+            Total distance: {dist}km
+        </pre>
+    </div>
+  </div>
+</flight-map>
+
+<script>
+  import { Map, NavigationControl } from "maplibre-gl";
+  import "maplibre-gl/dist/maplibre-gl.css";
+  class FlightMap extends HTMLElement {
+    constructor() {
+      super();
+      console.log(this.dataset);
+      const container = this.dataset.elementid!;
+      const map = new Map({
+        container,
+        style:
+          "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json",
+        center: [0, 0],
+        zoom: 1,
+      });
+
+      const coordinates: [[number, number], [number, number]] = [
+        [
+          parseFloat(this.dataset.startlng!),
+          parseFloat(this.dataset.startlat!),
+        ],
+        [parseFloat(this.dataset.endlng!), parseFloat(this.dataset.endlat!)],
+      ];
+
+      console.log(coordinates);
+
+      map.on("load", () => {
+        map.addSource("route-" + container, {
+          type: "geojson",
+          data: {
+            type: "Feature",
+            geometry: {
+              type: "Polygon",
+              coordinates: [coordinates as any],
+            },
+            properties: {},
+          },
+        });
+        map.addLayer({
+          id: "route-" + container,
+          type: "line",
+          source: "route-" + container,
+          layout: {},
+          paint: {
+            "line-color": "purple",
+            "line-width": 2,
+          },
+        });
+
+        map.fitBounds(
+          [
+            coordinates[0][0],
+            coordinates[0][1],
+            coordinates[1][0],
+            coordinates[1][1],
+          ],
+          {
+            speed: Number.MAX_VALUE,
+            padding: 50,
+          }
+        );
+      });
+
+      const control = new NavigationControl();
+      const element = document.getElementById(container)!;
+
+      element.addEventListener("mouseenter", () => {
+        map.addControl(control, "top-right");
+      });
+      element.addEventListener("mouseleave", () => {
+        map.removeControl(control);
+      });
+    }
+  }
+
+  customElements.define("flight-map", FlightMap);
+</script>
+
+<style>
+  div:not(.distance-container) {
+    width: 100%;
+    height: 400px;
+  }
+
+  .map-container {
+    position: relative;
+  }
+
+  .distance-container {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 1;
+  }
+  .distance-container > * {
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    font-size: 11px;
+    line-height: 18px;
+    display: block;
+    margin: 0;
+    padding: 5px;
+    border-radius: 3px;
+  }
+</style>

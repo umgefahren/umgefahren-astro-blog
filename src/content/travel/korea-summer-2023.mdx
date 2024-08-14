@@ -1,0 +1,111 @@
+---
+layout: /src/layouts/TravelReport.astro
+title: Korea Summer 2023
+summary: My first trip to Korea with my Girlfriend in the summer of 2023
+tags: 
+    - Korea
+pubDate: 2024-04-01
+---
+
+import MainImage from "/src/components/MainImage.astro"
+import ImageView from "/src/components/ImageView.astro"
+import FlightMap from "/src/components/FlightMap.astro"
+import FunFact from "/src/components/FunFact.astro"
+import HoverForHangul from "/src/components/HoverForHangul.astro"
+import ImageGallery from "/src/components/ImageGallery.astro"
+import SquidFisher from "/src/content/travel/korea-summer-2023-imgs/squid-fisher.jpg"
+import Incheon from "/src/content/travel/korea-summer-2023-imgs/incheon.jpg"
+import Homestreet from "/src/content/travel/korea-summer-2023-imgs/homestreet.jpg"
+import Gyeongbokgung from "/src/content/travel/korea-summer-2023-imgs/gyeongbokgung.jpg"
+import GwanghwamunPlaza from "/src/content/travel/korea-summer-2023-imgs/gwanghwamun-plaza.jpg"
+
+<MainImage image={SquidFisher} alt="Squid Fishers off the coast of Jeju"/>
+
+# Introduction
+
+2023 was the first time I ever went to Korea. That was a lot of firsts!
+
+- First country in Asia
+- First country outside of Europe and America
+- First flight over 10 hours
+- First time in a country where I can't even read the letters (properly)
+
+# The flight
+
+<ImageView image={Incheon} alt="Incheon" />
+
+The flight to Korea is very long!
+
+From `FRA` to `ICN` it is 13000 km. That is a long way! and travelling that long way takes about 11 hours.
+But I have to say that my economy experience with Korean Air was my best economy experience so far.
+The food was honestly the best airline food I ever had. The personal was very friendly and the movies were good too, 
+but unfortunately they still don't support Bluetooth.
+
+<FlightMap start={'FRA'} end={'ICN'} />
+
+I don't know if anyone ever had a real culture shock from an airport, simply because all airports are seamingly the same.
+So of course Incheon airport was no different.
+
+<FunFact>
+Did you know that Incheon airport is the international airport of Seoul (there is also Gimpo we will visit later) but it is not in Seoul?
+
+It's actually in Incheon (oh wonder) which is a city about 50 km west of Seoul on an island.
+
+If you don't believe me take a look at the map above.
+</FunFact>
+
+# The Arrival
+
+As previously described Incheon is quite a bit outside of Seoul so the ride from the airport to the city took about 1 hour.
+There was where the culture shock hit me. This city was so big that shortly after getting off the island you could already see big aparment complexes
+and the city was already going to the horizon. 
+
+<FunFact>
+With a city population of 10 million people Seoul is the 9th largest city in the world.[^1]
+
+If you count the metropolitan area it's the 4th largest city in the world.[^2] In fact nearly a third of the population of the whole korean peninsula lives in Seoul. [^3]
+
+<details>
+    <summary>Korean Peninsula at night</summary>
+    ![Korean Peninsula at night](/src/content/travel/korea-summer-2023-imgs/korean-peninsula.jpeg)
+    Source: [NASA](https://www.earthdata.nasa.gov/worldview/worldview-image-archive/korean-peninsula-at-night)
+
+    This image shows the Korean Peninsula at night. The big bright spot in the middle, slightly south of the dark part (the dark part is North Korea) is Seoul. As you can see the city stretches far into the country.
+</details>
+</FunFact>
+
+Not only did the city look quite different, the cars, the signs and sounds where all different too. If I'm honest: It was a lot to take in and it took me a day to adjust.
+
+# The first days
+
+During our stay in Korea during early to mid september Korea was still quite hot and humid. Luckely our home had AC so we could escape the heat during the day and go out in the evening and what a city!
+
+We where very fortunate that our home was in the nice neighbourhood of [<HoverForHangul roman="Jongno" hangul="종로구" />](https://en.wikipedia.org/wiki/Jongno), 
+which is very near to the [<HoverForHangul roman="Gyeongbokgung" hangul="경복궁" />](https://en.wikipedia.org/wiki/Gyeongbokgung) palace.
+
+<ImageView image={Homestreet} alt="Seochon"/>
+
+This place is very special because it is in a very quite part of the city, although not far from [<HoverForHangul roman="Gyeongbokgung" hangul="경복궁" />](https://en.wikipedia.org/wiki/Gyeongbokgung) and
+the [<HoverForHangul roman="Blue House" hangul="청와대" />](https://en.wikipedia.org/wiki/Blue_House).
+In recent years the area has become a very _hip_ place with many small modern shops and restaurants making it a great place to explore at night, when the heat is bearable.
+
+<ImageGallery images={[
+{
+    image: GwanghwamunPlaza,
+    alt: "Gwanghwamun Plaza"
+},
+{
+    image: Gyeongbokgung,
+    alt: "Gyeongbokgung"
+}
+]} />
+
+During the day we visited many of the tourist attractions in walking distance like the [<HoverForHangul roman="Gyeongbokgung" hangul="경복궁" />](https://en.wikipedia.org/wiki/Gyeongbokgung)
+
+
+[^1]: At least if you count by the population in the urban area. [List of largest cities]
+[^2]: If you count by the population in the metropolitan area. [List of largest cities]
+[^3]: The [Korean Peninsula] has a popluation of about 77 million people. The Seoul metropolitan area has a population of about 25 million people. That is nearly as much as the whole [population of North Korea](https://www.cia.gov/the-world-factbook/countries/korea-north/#people-and-society).
+
+[List of largest cities]: https://en.wikipedia.org/wiki/List_of_largest_cities
+[Korean Peninsula]: https://en.wikipedia.org/wiki/Korea

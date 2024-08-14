@@ -6,6 +6,7 @@ import { astroImageTools } from 'astro-imagetools';
 import prefetch from "@astrojs/prefetch";
 import svelte from "@astrojs/svelte";
 
+// https://astro.build/config
 export default defineConfig({
   site: 'https://umgefahren.xyz',
   integrations: [mdx(), sitemap(), tailwind(), prefetch(), svelte(), astroImageTools],

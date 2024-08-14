@@ -1,0 +1,58 @@
+---
+import { Picture } from "astro:assets";
+
+type Props = {
+  image: ImageMetadata;
+  alt: string;
+};
+
+function getFormats(): string[] {
+  if (import.meta.env.DEV) return ["webp"];
+  if (import.meta.env.PROD) return ["heif", "avif", "webp"];
+  return [];
+}
+
+const formats = getFormats();
+
+
+const { image, alt } = Astro.props;
+const widthSet: Record<number, number> = {
+    1536: 2048,
+    1024: 1536,
+    768: 640,
+}
+
+let sizesString = Object.entries(widthSet)
+    .toSorted((a, b) => Number(a) - Number(b))
+    .map(([width, size]) => `(max-width: ${width}px) ${size}px`)
+    .join(", ");
+
+sizesString += `, ${image.width}px`;
+
+console.log(sizesString)
+
+const widths = Object.keys(widthSet).map(Number);
+widths.push(image.width)
+
+---
+
+<style>
+  div.main-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+</style>
+
+<div class="main-image">
+  <Picture
+    src={image}
+    alt={alt}
+    formats={formats}
+    fallbackFormat="jpg"
+    quality={"high"}
+    loading={"eager"}
+    widths={widths}
+    sizes={sizesString}
+  />
+</div>
