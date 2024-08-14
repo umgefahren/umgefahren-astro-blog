@@ -1,6 +1,7 @@
 ---
 import { ExifTool, type Tags } from "exiftool-vendored";
 import { Picture } from "astro-imagetools/components";
+import ShutterSpeed from "./ShutterSpeed.svelte";
 
 export interface Props {
   image: ImageMetadata;
@@ -29,6 +30,14 @@ const reader = new ExifTool();
 const tags = await reader.read(path);
 await reader.end();
 
+const breakPoints = [
+  400, 640, 800, 1024, 1280, 1440, 1920, 2560, 2880, 3840,
+].filter((val) => val <= image.width);
+
+if (image.width > 3840) {
+  breakPoints.push(image.width);
+}
+
 interface ExifData {
   camera?: string;
   lens?: string;
@@ -45,7 +54,7 @@ function extractData(tags: Tags): ExifData {
     camera: tags.Model,
     lens: tags.LensID,
     aperture: tags.Aperture,
-    shutterSpeed: tags.ShutterSpeed,
+    shutterSpeed: tags.ShutterSpeed?.toString(),
     iso: tags.ISO,
     focalLength: tags.FocalLength,
     height: image.height,
@@ -64,48 +73,9 @@ const exifData = extractData(tags);
     color: #000;
   }
 
-  .exif {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    transform: translateY(100%);
-    transition: transform 0.3s ease-in-out;
-    opacity: 0;
-    background-color: #fff; /* Change as needed */
-    border-radius: 1rem 0 0 0;
-    font-size: small;
-  }
-
   .image {
     transition: filter 0.3s ease-in-out;
     pointer-events: none;
-  }
-
-  .container:hover:not(:fullscreen) .exif {
-    transform: translateY(0);
-    opacity: 0.75;
-  }
-
-
-  .container > .exif > table {
-    /* A table with black lines and rounded corners and a border around all cells */
-    border: 2px solid #000;
-    border-radius: 5px;
-    border-collapse: separate;
-    border-spacing: 0;
-
-    margin: 0.5rem;
-  }
-
-  .container > .exif > table td {
-    /* A cell with padding and a black bottom border */
-    padding: 5px;
-    border: 1px solid #000;
-  }
-
-  .container > .exif > h3 {
-    padding: 0.75rem;
-    font-size: larger;
   }
 
   .subtitle {
@@ -115,6 +85,17 @@ const exifData = extractData(tags);
   .subtitle h3 {
     font-size: larger;
   }
+
+  span.line {
+    display: inline-block;
+  }
+
+  span.line-aperture::first-letter {
+    font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+      "Lucida Sans", Arial, sans-serif;
+    font-style: italic;
+    font-weight: bold;
+  }
 </style>
 
 <image-container data-elementid={elementId}>
@@ -123,15 +104,13 @@ const exifData = extractData(tags);
       <Picture
         src={path}
         alt={alt}
-        placeholder="tracedSvg"
+        placeholder="blurred"
         format={["heif", "avif", "webp"]}
         fallbackFormat="jpg"
         includeSourceFormat={false}
         w={width ?? image.width}
         h={height ?? image.height}
-        breakpoints={{
-          maxWidth: width ?? image.width,
-        }}
+        breakpoints={breakPoints}
         formatOptions={{
           heif: {
             quality: 90,
@@ -140,78 +119,64 @@ const exifData = extractData(tags);
           avif: {
             quailty: 90,
             depth: 12,
-          },
+          }
         }}
       />
     </div>
-    <div class="exif">
-      <table>
-        {
-          exifData.camera && (
-            <tr>
-              <td>Camera</td>
-              <td>{exifData.camera}</td>
-            </tr>
-          )
-        }
-        {
-          exifData.lens && (
-            <tr>
-              <td>Lens</td>
-              <td>{exifData.lens}</td>
-            </tr>
-          )
-        }
-
-        {
-          exifData.aperture && (
-            <tr>
-              <td>Aperture</td>
-              <td>f {exifData.aperture}</td>
-            </tr>
-          )
-        }
-
-        {
-          exifData.shutterSpeed && (
-            <tr>
-              <td>Shutter Speed</td>
-              <td>{exifData.shutterSpeed}</td>
-            </tr>
-          )
-        }
-
-        {
-          exifData.iso && (
-            <tr>
-              <td>ISO</td>
-              <td>{exifData.iso}</td>
-            </tr>
-          )
-        }
-
-        {
-          exifData.focalLength && (
-            <tr>
-              <td>Focal Length</td>
-              <td>{exifData.focalLength}</td>
-            </tr>
-          )
-        }
-
-        <tr>
-          <td>Height</td>
-          <td>{exifData.height}</td>
-        </tr>
-
-        <tr>
-          <td>Width</td>
-          <td>{exifData.width}</td>
-        </tr>
-      </table>
-    </div>
+    <h3 class="subtitle">
+      {alt}
+    </h3>
+    <span>
+      {
+        exifData.camera && (
+          <span class="line">
+            <strong>Camera:</strong> {exifData.camera}
+          </span>
+        )
+      }
+      {
+        exifData.lens && (
+          <span class="line">
+            <strong>Lens:</strong> {exifData.lens}
+          </span>
+        )
+      }
+      {
+        exifData.aperture && (
+          <span class="line line-aperture">f/{exifData.aperture}</span>
+        )
+      }
+      {
+        typeof exifData.shutterSpeed === "string" && (
+          <span class="line">
+            <strong>Shutter Speed:</strong>{" "}
+            <ShutterSpeed shutterSpeed={exifData.shutterSpeed} />
+          </span>
+        )
+      }
+      {
+        exifData.iso && (
+          <span class="line">
+            <strong>ISO:</strong> {exifData.iso}
+          </span>
+        )
+      }
+      {
+        exifData.focalLength && (
+          <span class="line">
+            <strong>Focal Length:</strong> {exifData.focalLength}
+          </span>
+        )
+      }
+      {
+        exifData.height && exifData.width && (
+          <span class="line">
+            <strong>Resolution:</strong> {exifData.width}x{exifData.height}
+          </span>
+        )
+      }
+    </span>
   </div>
-  {alt}
 </image-container>
 
 <script>

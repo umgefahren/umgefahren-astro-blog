@@ -8,32 +8,47 @@ export interface Props {
 }
 
 const { images } = Astro.props;
+const uniqueId = crypto.randomUUID();
 ---
 
 <style lang="postcss">
-  @media (min-width: 1024px) {
     .my-carousel:not(:fullscreen) {
-      @apply carousel carousel-center  max-w-screen-lg; 
+      @apply carousel carousel-center; 
     }
 
     .my-carousel:not(:fullscreen) div.item {
       @apply carousel-item w-full;
     }
-  }
 
   .my-carousel {
     margin-bottom: 1rem;
   }
+
+  .my-carousel:hover > div.item > div.absolute {
+    display: flex;
+  }
 </style>
 
-<div class="my-carousel">
-  {
-    images.map(({ image, alt }) => (
-      <div class="item">
-        <div class="itemcontent">
-        <ImageView image={image} alt={alt} />
+  <div class="my-carousel">
+    {
+      images.map(({ image, alt }, idx) => (
+        <div class="item relative" id={`${uniqueId}-slide-${idx}`}>
+          <ImageView image={image} alt={alt} />
+          <div class="absolute left-5 right-5 top-1/2 hidden -translate-y-1/2 transform justify-between">
+            <a
+              href={`#${uniqueId}-slide-${idx - 1 < 0 ? images.length - idx - 1 : idx - 1}`}
+              class="btn btn-circle"
+            >
+              ❮
+            </a>
+            <a
+              href={`#${uniqueId}-slide-${(idx + 1) % images.length}`}
+              class="btn btn-circle"
+            >
+              ❯
+            </a>
+          </div>
         </div>
-      </div>
-    ))
-  }
-</div>
+      ))
+    }
+  </div>
