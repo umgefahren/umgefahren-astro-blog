@@ -29,6 +29,9 @@ importers:
       '@astrojs/tailwind':
         specifier: ^5.1.0
         version: 5.1.0(astro@4.13.4(typescript@5.5.4))(tailwindcss@3.4.10)
+      '@fontsource/gowun-batang':
+        specifier: ^5.0.13
+        version: 5.0.13
       '@fontsource/jetbrains-mono':
         specifier: ^5.0.20
         version: 5.0.20
@@ -425,6 +428,9 @@ packages:
     engines: {node: '>=12'}
     cpu: [x64]
     os: [win32]
+
+  '@fontsource/gowun-batang@5.0.13':
+    resolution: {integrity: sha512-piZnnxYZ9dWW8fWlbLVs4ikmAx1NVJQfOX6vfbMxJumamwhhSLkwUVA1Qbs433jSezuKrcNbV8TS3vsbwkJeiQ==}
 
   '@fontsource/jetbrains-mono@5.0.20':
     resolution: {integrity: sha512-QkrihYWqftzs+04TinulIhnFqNwO6990HR07iCUae/6daOZAMy7urUPzytrRT9M8KLTTHBeHOY0CKqOs1+o2OQ==}
@@ -3565,6 +3571,8 @@ snapshots:
 
   '@esbuild/win32-x64@0.21.5':
     optional: true
+
+  '@fontsource/gowun-batang@5.0.13': {}
 
   '@fontsource/jetbrains-mono@5.0.20': {}
 

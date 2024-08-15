@@ -1,4 +1,6 @@
 ---
+import '@fontsource/gowun-batang'
+
 export interface Props {
   hangul: string;
   roman: string;
@@ -33,6 +35,7 @@ const longest = hangul.length > roman.length ? hangul : roman;
 
   .hangul {
     opacity: 0;
+    font-family: 'Gowun Batang', serif;
   }
 
   .fading-text:hover .romanized {

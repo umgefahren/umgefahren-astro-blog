@@ -8,12 +8,13 @@ type Props = MarkdownLayoutProps<{
   title: string;
   summary: string;
   date: Date;
+  lang: string;
 }>;
 
 const { frontmatter } = Astro.props;
 ---
 
-<html>
+<html lang={frontmatter.lang}>
   <head>
     <BaseHead title={frontmatter.title} description={frontmatter.summary} />
     <style is:global>

@@ -1,0 +1,39 @@
+---
+export interface Props {
+  message: string;
+  password: string;
+}
+
+const { message, password } = Astro.props;
+
+const keyMaterial = await crypto.subtle.importKey(
+  "raw",
+  new TextEncoder().encode(password),
+  "PBKDF2",
+  false,
+  ["deriveBits", "deriveKey"]
+);
+
+const key = await crypto.subtle.deriveKey(
+  {
+    name: "PBKDF2",
+    salt: new TextEncoder().encode("salt"),
+    iterations: 100000,
+  },
+  keyMaterial,
+  { name: "AES-GCM", length: 256 },
+  true,
+  ["encrypt", "decrypt"]
+);
+
+const iv = crypto.getRandomValues(new Uint8Array(12));
+
+const ciphertext = window.crypto.subtle.encrypt(
+  {
+    name: "AES-GCM",
+    iv,
+  },
+  key,
+  new TextEncoder().encode(message)
+);
+---
