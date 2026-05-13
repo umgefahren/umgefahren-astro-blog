@@ -15,10 +15,6 @@ const posts = (await Astro.glob("./posts/*.{md,mdx}")).sort(
 <html lang="en">
   <head>
     <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-    <script
-      defer
-      data-domain="umgefahren.xyz"
-      src="https://plausible.io/js/script.js"></script>
   </head>
   <body class="bg-slate-200 dark:bg-slate-900">
     <IndexHeader />

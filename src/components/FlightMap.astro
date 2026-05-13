@@ -1,6 +1,6 @@
 ---
 import "maplibre-gl/dist/maplibre-gl.css";
-import airports from "airport-codes";
+import { airports } from '@nwpr/airport-codes'
 export interface Props {
   start: string;
   end: string;
@@ -9,16 +9,17 @@ export interface Props {
 const { start, end } = Astro.props;
 
 const elementId = crypto.randomUUID();
-const startAirport = airports.findWhere({ iata: start });
+const startAirport = airports.find(airport => airport.iata === start)!
 const startAirportPosition = [
-  startAirport.get("latitude"),
-  startAirport.get("longitude"),
+  startAirport.latitude,
+  startAirport.longitude
 ];
-const endAirport = airports.findWhere({ iata: end });
+const endAirport = airports.find(airport => airport.iata === end)!
 const endAirportPosition = [
-  endAirport.get("latitude"),
-  endAirport.get("longitude"),
+  endAirport.latitude,
+  endAirport.longitude
 ];
+console.log(startAirport, endAirport)
 ---
 
 <flight-map
@@ -38,7 +39,6 @@ const endAirportPosition = [
   class FlightMap extends HTMLElement {
     constructor() {
       super();
-      console.log(this.dataset);
       const container = this.dataset.elementid!;
       const map = new Map({
         container,
@@ -59,8 +59,6 @@ const endAirportPosition = [
       ];
 
       map.addControl(new AttributionControl(), 'bottom-right')
-
-      console.log(coordinates);
 
       map.on("load", () => {
         map.addSource("route-" + container, {

@@ -14,8 +14,6 @@ const { image, alt, height, width } = Astro.props;
 
 const elementId = crypto.randomUUID();
 
-console.log(image);
-
 let path = "";
 if (image.src.startsWith("/_astro/")) {
   path = `../..${image.src}`;

@@ -7,9 +7,10 @@ export interface Props {
 }
 const { hangul, roman } = Astro.props;
 const longest = hangul.length > roman.length ? hangul : roman;
----
 
-<span class="fading-text" data-longest={longest}>
+const id = crypto.randomUUID()
+---
+<span class="fading-text" data-longest={longest} id={`${id}-${roman}`}>
   <span class="text romanized">{roman}</span>
   <span class="text hangul">{hangul}</span>
 </span>

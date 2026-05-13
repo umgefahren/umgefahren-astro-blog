@@ -31,36 +31,17 @@ const { frontmatter } = Astro.props;
         font-size: 2em;
       }
 
-      .markdown > h1:not(article > h1)::before {
-        content: "#";
-        margin-right: 0.5em;
-      }
 
       .markdown > h2 {
         font-size: 1.5em;
-      }
-
-      .markdown > h2::before {
-        content: "##";
-        margin-right: 0.5em;
       }
 
       .markdown > h3 {
         font-size: 1.25em;
       }
 
-      .markdown > h3::before {
-        content: "###";
-        margin-right: 0.5em;
-      }
-
       .markdown > h4 {
         font-size: 1em;
-      }
-
-      .markdown > h4::before {
-        content: "####";
-        margin-right: 0.5em;
       }
 
       .markdown > ul {
@@ -71,6 +52,10 @@ const { frontmatter } = Astro.props;
       .markdown > p {
         margin-top: 0.75em;
         margin-bottom: 0.75em;
+      }
+
+      .markdown .hash-link {
+        margin-right: 0.5em;
       }
     </style>
   </head>
@@ -98,9 +83,20 @@ const { frontmatter } = Astro.props;
       </article>
     </main>
     <Footer />
-    <script defer is:inline>
-      document.querySelectorAll(".markdown a[href*=wikipedia]").forEach((element) => {
-        element.setAttribute('target', '_blank')
+    <script>
+      const hashLinks = document.querySelectorAll('a:has(.hash-link)')
+      hashLinks.forEach(link => {
+        link.addEventListener('click', (event) => {
+          event.preventDefault()
+          const href = link.getAttribute('href')
+          if (!href) return
+          const target = document.querySelector(href)
+          if (!target) return
+          target.scrollIntoView({ behavior: 'smooth' })
+          window.history.pushState(null, '', link.getAttribute('href'))
+          // update the URL in the address bar
+          window.location.hash = href
+        })
       })
     </script>
   </body>
