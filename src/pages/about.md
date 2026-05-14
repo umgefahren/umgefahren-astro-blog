@@ -7,7 +7,7 @@ updatedDate: "2022-06-12"
  
 ## Hi
 
-I'm Hannes. I'm studying Computer Science at ETH Zürich. I work on rust-libp2p in my free time. Hit me up, if you want to know more.
+I'm Hannes. I'm studying Computer Science at ETH Zürich. I work on rust-libp2p in my free time. Hit me up if you want to know more.
 
 ### Contact Me
 
