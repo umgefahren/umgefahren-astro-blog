@@ -1,7 +1,8 @@
 ---
-import { ExifTool, type Tags } from "exiftool-vendored";
+import type { Tags } from "exiftool-vendored";
 import { Picture } from "astro:assets";
 import ShutterSpeed from "./ShutterSpeed.svelte";
+import { readTags } from "../lib/exiftool";
 
 export interface Props {
   image: ImageMetadata;
@@ -23,9 +24,7 @@ const breakPoints = [
   400, 640, 800, 1024, 1280, 1440, 1920, 2560, 2880, 3840,
 ].filter((val) => val <= image.width);
 
-const reader = new ExifTool();
-const tags = await reader.read(fsPath);
-await reader.end();
+const tags = await readTags(fsPath);
 
 interface ExifData {
   camera?: string;

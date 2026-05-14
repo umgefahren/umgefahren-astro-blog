@@ -21,6 +21,11 @@ export default defineConfig({
   integrations: [mdx(), sitemap(), svelte(), solidJs()],
   vite: {
     plugins: [tailwindcss()],
+    build: {
+      // maplibre-gl is ~1MB and is already isolated in its own chunk via
+      // dynamic import in FlightMap; the warning is purely informational.
+      chunkSizeWarningLimit: 1100,
+    },
   },
   image: {
     service: { entrypoint: './src/image-service/jxl-sharp.ts' },

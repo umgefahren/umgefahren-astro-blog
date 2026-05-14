@@ -19,7 +19,6 @@ const endAirportPosition = [
   endAirport.latitude,
   endAirport.longitude
 ];
-console.log(startAirport, endAirport)
 ---
 
 <flight-map
@@ -35,40 +34,34 @@ console.log(startAirport, endAirport)
 </flight-map>
 
 <script>
-  import { Map, AttributionControl } from "maplibre-gl";
   class FlightMap extends HTMLElement {
-    constructor() {
-      super();
+    async connectedCallback() {
       const container = this.dataset.elementid!;
+      const coordinates: [[number, number], [number, number]] = [
+        [parseFloat(this.dataset.startlng!), parseFloat(this.dataset.startlat!)],
+        [parseFloat(this.dataset.endlng!), parseFloat(this.dataset.endlat!)],
+      ];
+
+      // maplibre-gl is ~1MB; load it only when a FlightMap actually mounts.
+      const { Map, AttributionControl } = await import("maplibre-gl");
+
       const map = new Map({
         container,
-        style:
-          "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json",
+        style: "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json",
         center: [0, 0],
         zoom: 1,
         interactive: false,
         attributionControl: false,
       });
 
-      const coordinates: [[number, number], [number, number]] = [
-        [
-          parseFloat(this.dataset.startlng!),
-          parseFloat(this.dataset.startlat!),
-        ],
-        [parseFloat(this.dataset.endlng!), parseFloat(this.dataset.endlat!)],
-      ];
-
-      map.addControl(new AttributionControl(), 'bottom-right')
+      map.addControl(new AttributionControl(), "bottom-right");
 
       map.on("load", () => {
         map.addSource("route-" + container, {
           type: "geojson",
           data: {
             type: "Feature",
-            geometry: {
-              type: "Polygon",
-              coordinates: [coordinates as any],
-            },
+            geometry: { type: "Polygon", coordinates: [coordinates as any] },
             properties: {},
           },
         });
@@ -77,23 +70,12 @@ console.log(startAirport, endAirport)
           type: "line",
           source: "route-" + container,
           layout: {},
-          paint: {
-            "line-color": "purple",
-            "line-width": 2,
-          },
+          paint: { "line-color": "purple", "line-width": 2 },
         });
 
         map.fitBounds(
-          [
-            coordinates[0][0],
-            coordinates[0][1],
-            coordinates[1][0],
-            coordinates[1][1],
-          ],
-          {
-            speed: Number.MAX_VALUE,
-            padding: 50,
-          }
+          [coordinates[0][0], coordinates[0][1], coordinates[1][0], coordinates[1][1]],
+          { speed: Number.MAX_VALUE, padding: 50 }
         );
       });
     }
