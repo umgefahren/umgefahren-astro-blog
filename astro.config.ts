@@ -3,7 +3,6 @@ import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 import svelte from "@astrojs/svelte";
-import solidJs from "@astrojs/solid-js";
 import remarkGfm from 'remark-gfm'
 import smartypants from 'remark-smartypants'
 import emoji from 'remark-emoji'
@@ -18,7 +17,7 @@ import rehypeExternalLinks from 'rehype-external-links'
 export default defineConfig({
   prefetch: true,
   site: 'https://umgefahren.xyz',
-  integrations: [mdx(), sitemap(), svelte(), solidJs()],
+  integrations: [mdx(), sitemap(), svelte()],
   vite: {
     plugins: [tailwindcss()],
     build: {

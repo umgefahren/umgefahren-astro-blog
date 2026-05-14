@@ -1,15 +1,29 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
 
-const travelCollection = defineCollection({
+const postSchema = z.object({
+    title: z.string(),
+    description: z.string(),
+    pubDate: z.coerce.date(),
+});
+
+const posts = defineCollection({
+    loader: glob({ pattern: '*.{md,mdx}', base: './src/content/posts' }),
+    schema: postSchema,
+});
+
+const projects = defineCollection({
+    loader: glob({ pattern: '*.{md,mdx}', base: './src/content/projects' }),
+    schema: postSchema,
+});
+
+const travel = defineCollection({
     loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/travel' }),
     schema: z.object({
         title: z.string(),
         tags: z.array(z.string()),
-        pubDate: z.date(),
+        pubDate: z.coerce.date(),
     }),
 });
 
-export const collections = {
-    'travel': travelCollection,
-};
+export const collections = { posts, projects, travel };

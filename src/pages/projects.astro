@@ -3,16 +3,10 @@ import BaseHead from "../components/BaseHead.astro";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import { SITE_TITLE, SITE_DESCRIPTION } from "../config";
+import { getCollection } from "astro:content";
 
-const posts = Object.values(
-    import.meta.glob<{ frontmatter: { pubDate: string; title: string }; url: string }>(
-        "./projects/*.{md,mdx}",
-        { eager: true }
-    )
-).sort(
-    (a, b) =>
-        new Date(b.frontmatter.pubDate).valueOf() -
-        new Date(a.frontmatter.pubDate).valueOf()
+const projects = (await getCollection("projects")).sort(
+    (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
 ---
 
@@ -41,26 +35,24 @@ const posts = Object.values(
             <section>
                 <ul>
                     {
-                        posts.map((post) => (
+                        projects.map((project) => (
                             <li>
                                 <time
                                     class="text-gray-500/80 dark:text-gray-300/80"
-                                    datetime={post.frontmatter.pubDate}
+                                    datetime={project.data.pubDate.toISOString()}
                                 >
-                                    {new Date(
-                                        post.frontmatter.pubDate
-                                    ).toLocaleDateString("en-us", {
+                                    {project.data.pubDate.toLocaleDateString("en-us", {
                                         year: "numeric",
                                         month: "short",
                                         day: "numeric",
                                     })}
                                 </time>
                                 <a
-                                    href={post.url}
+                                    href={`/projects/${project.id}`}
                                     class="text-gray-600 dark:text-gray-200"
                                     rel="prefetch"
                                 >
-                                    {post.frontmatter.title}
+                                    {project.data.title}
                                 </a>
                             </li>
                         ))

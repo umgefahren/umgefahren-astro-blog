@@ -22,15 +22,15 @@ const widthSet: Record<number, number> = {
     768: 640,
 }
 
-let sizesString = Object.entries(widthSet)
+// Cap at 3840 (largest entry below) so JXL encoding stays tractable; the
+// source image can be 7K+ but we never need to ship that.
+const widths = [400, 640, 800, 1024, 1280, 1440, 1920, 2560, 2880, 3840]
+    .filter((w) => w <= image.width);
+
+const sizesString = Object.entries(widthSet)
     .toSorted((a, b) => Number(a) - Number(b))
     .map(([width, size]) => `(max-width: ${width}px) ${size}px`)
     .join(", ");
-
-sizesString += `, ${image.width}px`;
-
-const widths = Object.keys(widthSet).map(Number);
-widths.push(image.width)
 
 ---
 

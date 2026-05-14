@@ -1,8 +1,7 @@
 ---
-layout: "../../layouts/BlogPost.astro"
 title: "How I built the Dione chat system"
 description: "A description on how I wrote the Dione chat system and the lessons I learned."
-pubDate: "03-23-2022"
+pubDate: "2022-03-23"
 ---
 In the middle of the first wave of the pandemic a friend of mine wanted to build a basic P2P-messenger (like termchat) to improve his coding skills. About a year later I started writing my biggest project yet and I've been hooked since.
 

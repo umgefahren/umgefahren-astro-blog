@@ -2,7 +2,7 @@
 layout: "../layouts/BlogPost.astro"
 title: "About Me"
 description: "I'm Hannes"
-updatedDate: "06-12-2022"
+updatedDate: "2022-06-12"
 ---
  
 ## Hi

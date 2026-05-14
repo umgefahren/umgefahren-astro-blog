@@ -4,18 +4,19 @@ import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import "@fontsource/jetbrains-mono";
 
-export interface Props {
-  content: {
-    title: string;
-    description: string;
-    pubDate?: Date;
-    updatedDate?: string;
-  };
+interface Frontmatter {
+  title: string;
+  description: string;
+  pubDate?: string | Date;
+  updatedDate?: string;
 }
 
-const {
-  content: { title, description, pubDate, updatedDate },
-} = Astro.props;
+export interface Props {
+  frontmatter: Frontmatter;
+}
+
+const { frontmatter } = Astro.props;
+const { title, description, pubDate } = frontmatter;
 ---
 
 <html lang="en">
@@ -28,20 +29,10 @@ const {
         margin-bottom: 0.25em;
       }
 
-      code {
-        --tw-bg-opacity: 1;
-        background-color: rgb(226 232 240 / var(--tw-bg-opacity));
-      }
       .astro-code {
         font-family: "JetBrains Mono", monospace;
         margin-top: 0.5em;
         margin-bottom: 0;
-      }
-      @media (prefers-color-scheme: dark) {
-        code {
-          --tw-bg-opacity: 1;
-          background-color: rgb(15 23 42 / var(--tw-bg-opacity));
-        }
       }
     </style>
   </head>
@@ -56,13 +47,15 @@ const {
         <p class="mt-1 text-gray-500"></p>
         {
           pubDate && (
-            <time class=" text-gray-900 dark:text-gray-100">
+            <time class="text-gray-900 dark:text-gray-100">
               {new Date(pubDate).toDateString()}
             </time>
           )
         }
         <p></p>
-        <div class="text-gray-700 dark:text-gray-300">
+        <div
+          class="text-gray-700 dark:text-gray-300 [&_code]:bg-slate-300 dark:[&_code]:bg-slate-800"
+        >
           <slot />
         </div>
       </article>
