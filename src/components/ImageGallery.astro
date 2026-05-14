@@ -11,9 +11,10 @@ const { images } = Astro.props;
 const uniqueId = crypto.randomUUID();
 ---
 
-<style lang="postcss">
+<style>
+  @reference "../styles/global.css";
     .my-carousel:not(:fullscreen) {
-      @apply carousel carousel-center; 
+      @apply carousel carousel-center;
     }
 
     .my-carousel:not(:fullscreen) div.item {
