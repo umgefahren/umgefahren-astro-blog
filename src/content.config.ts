@@ -5,6 +5,7 @@ const postSchema = z.object({
     title: z.string(),
     description: z.string(),
     pubDate: z.coerce.date(),
+    updatedDate: z.coerce.date().optional(),
 });
 
 const posts = defineCollection({
