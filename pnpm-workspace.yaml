@@ -1,5 +1,0 @@
-onlyBuiltDependencies:
-  - '@nwpr/airport-codes'
-  - esbuild
-  - exifreader
-  - sharp
