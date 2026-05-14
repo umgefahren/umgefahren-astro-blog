@@ -28,9 +28,9 @@ const travels = (await getCollection("travel")).sort((a, b) => {
       }
     </style>
   </head>
-  <body class="bg-slate-200 dark:bg-slate-900">
+  <body class="bg-slate-200 dark:bg-slate-900 min-h-dvh flex flex-col">
     <Header />
-    <main>
+    <main class="flex-1">
       <section>
         <ul>
           {

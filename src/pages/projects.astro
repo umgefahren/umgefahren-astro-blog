@@ -29,9 +29,9 @@ const projects = (await getCollection("projects")).sort(
             }
         </style>
     </head>
-    <body class="bg-slate-200 dark:bg-slate-900">
+    <body class="bg-slate-200 dark:bg-slate-900 min-h-dvh flex flex-col">
         <Header />
-        <main>
+        <main class="flex-1">
             <section>
                 <ul>
                     {
@@ -53,6 +53,11 @@ const projects = (await getCollection("projects")).sort(
                                     rel="prefetch"
                                 >
                                     {project.data.title}
+                                    {project.data.stub && (
+                                        <span class="ml-2 text-xs uppercase tracking-wider text-gray-500 italic">
+                                            stub
+                                        </span>
+                                    )}
                                 </a>
                             </li>
                         ))

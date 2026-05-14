@@ -6,6 +6,8 @@ const postSchema = z.object({
     description: z.string(),
     pubDate: z.coerce.date(),
     updatedDate: z.coerce.date().optional(),
+    // Stubs are kept in their category listing but hidden from the home page.
+    stub: z.boolean().optional().default(false),
 });
 
 const posts = defineCollection({
@@ -24,6 +26,8 @@ const travel = defineCollection({
         title: z.string(),
         tags: z.array(z.string()),
         pubDate: z.coerce.date(),
+        summary: z.string().optional(),
+        stub: z.boolean().optional().default(false),
     }),
 });
 

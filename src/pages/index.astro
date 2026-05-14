@@ -5,9 +5,59 @@ import Footer from "../components/Footer.astro";
 import { SITE_TITLE, SITE_DESCRIPTION } from "../config";
 import { getCollection } from "astro:content";
 
-const posts = (await getCollection("posts")).sort(
-  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-);
+type Kind = "post" | "project" | "travel";
+interface Entry {
+  kind: Kind;
+  title: string;
+  pubDate: Date;
+  description?: string;
+  href: string;
+}
+
+const [posts, projects, travel] = await Promise.all([
+  getCollection("posts"),
+  getCollection("projects"),
+  getCollection("travel"),
+]);
+
+const entries: Entry[] = [
+  ...posts
+    .filter((p) => !p.data.stub)
+    .map<Entry>((p) => ({
+      kind: "post",
+      title: p.data.title,
+      pubDate: p.data.pubDate,
+      description: p.data.description,
+      href: `/posts/${p.id}`,
+    })),
+  ...projects
+    .filter((p) => !p.data.stub)
+    .map<Entry>((p) => ({
+      kind: "project",
+      title: p.data.title,
+      pubDate: p.data.pubDate,
+      description: p.data.description,
+      href: `/projects/${p.id}`,
+    })),
+  ...travel
+    .filter((t) => !t.data.stub)
+    .map<Entry>((t) => ({
+      kind: "travel",
+      title: t.data.title,
+      pubDate: t.data.pubDate,
+      description: t.data.summary,
+      href: `/travel/${t.id}`,
+    })),
+].sort((a, b) => b.pubDate.valueOf() - a.pubDate.valueOf());
+
+const kindLabel: Record<Kind, string> = {
+  post: "Post",
+  project: "Project",
+  travel: "Travel",
+};
+
+const pillClass =
+  "inline-block text-xs uppercase tracking-wider px-2 py-0.5 rounded-full bg-gray-600 text-gray-200 dark:bg-gray-300 dark:text-gray-700 text-center w-full";
 ---
 
 <!doctype html>
@@ -15,30 +65,36 @@ const posts = (await getCollection("posts")).sort(
   <head>
     <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
   </head>
-  <body class="bg-slate-200 dark:bg-slate-900">
+  <body class="bg-slate-200 dark:bg-slate-900 min-h-dvh flex flex-col">
     <IndexHeader />
-    <main class="max-w-screen-sm px-6 mx-auto">
+    <main class="max-w-screen-sm px-6 mx-auto w-full flex-1">
       {
-        posts.map((post) => (
-          <div class="pt-12">
-            <a href={`/posts/${post.id}`}>
-              <h3 class="text-2xl font-bold text-gray-800 dark:text-gray-200 hover:text-gray-600 hover:dark:text-gray-300">
-                {post.data.title}
-              </h3>
-            </a>
-            <p class="text-gray-700">
-              <time datetime={post.data.pubDate.toISOString()}>
-                {post.data.pubDate.toLocaleDateString("en-us", {
+        entries.map((entry) => (
+          <article class="pt-8 grid grid-cols-[5rem_1fr] gap-x-3 items-baseline">
+            <span class={pillClass}>{kindLabel[entry.kind]}</span>
+            <div>
+              <a href={entry.href} rel="prefetch">
+                <h3 class="text-2xl font-bold text-gray-800 dark:text-gray-200 hover:text-gray-600 hover:dark:text-gray-300">
+                  {entry.title}
+                </h3>
+              </a>
+              <time
+                datetime={entry.pubDate.toISOString()}
+                class="text-gray-700 dark:text-gray-400"
+              >
+                {entry.pubDate.toLocaleDateString("en-us", {
                   year: "numeric",
                   month: "short",
                   day: "numeric",
                 })}
               </time>
-            </p>
-            <p class="mt-3 text-gray-700 dark:text-gray-400">
-              {post.data.description}
-            </p>
-          </div>
+            </div>
+            {entry.description && (
+              <p class="col-span-2 mt-3 text-gray-700 dark:text-gray-400">
+                {entry.description}
+              </p>
+            )}
+          </article>
         ))
       }
     </main>
