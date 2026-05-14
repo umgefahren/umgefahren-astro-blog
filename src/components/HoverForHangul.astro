@@ -7,10 +7,14 @@ export interface Props {
 }
 const { hangul, roman } = Astro.props;
 const longest = hangul.length > roman.length ? hangul : roman;
-
-const id = crypto.randomUUID()
 ---
-<span class="fading-text" data-longest={longest} id={`${id}-${roman}`}>
+<span
+  class="fading-text"
+  data-longest={longest}
+  tabindex="0"
+  role="button"
+  aria-label={`Show Hangul: ${hangul}`}
+>
   <span class="text romanized">{roman}</span>
   <span class="text hangul">{hangul}</span>
 </span>
@@ -20,6 +24,7 @@ const id = crypto.randomUUID()
     display: inline-block;
     position: relative;
     vertical-align: baseline;
+    cursor: help;
   }
 
   .text {
@@ -39,11 +44,15 @@ const id = crypto.randomUUID()
     font-family: 'Gowun Batang', serif;
   }
 
-  .fading-text:hover .romanized {
+  .fading-text:hover .romanized,
+  .fading-text:focus-visible .romanized,
+  .fading-text.show-hangul .romanized {
     opacity: 0;
   }
 
-  .fading-text:hover .hangul {
+  .fading-text:hover .hangul,
+  .fading-text:focus-visible .hangul,
+  .fading-text.show-hangul .hangul {
     opacity: 1;
   }
 
@@ -55,3 +64,13 @@ const id = crypto.randomUUID()
     height: 0;
   }
 </style>
+
+<script>
+  // Tap-to-toggle on devices without hover (mobile). Delegated so we only
+  // bind once even with many <HoverForHangul> on the page.
+  document.addEventListener("click", (event) => {
+    const target = event.target as Element | null;
+    const el = target?.closest?.(".fading-text");
+    if (el instanceof HTMLElement) el.classList.toggle("show-hangul");
+  });
+</script>

@@ -35,7 +35,7 @@ const uniqueId = crypto.randomUUID();
 
 </style>
 
-<div class="my-carousel">
+<div class="my-carousel" data-carousel-id={uniqueId}>
   {
     images.map(({ image, alt }, idx) => (
       <div class="item relative" id={`${uniqueId}-slide-${idx}`}>
@@ -61,3 +61,20 @@ const uniqueId = crypto.randomUUID();
     ))
   }
 </div>
+
+<script>
+  // Intercept carousel arrow clicks: scroll the target slide into view inside
+  // its (horizontal-snap) parent, without pushing a history entry per click.
+  // The href attribute is kept so the carousel still navigates without JS.
+  document.addEventListener("click", (event) => {
+    const target = event.target as Element | null;
+    const link = target?.closest?.(".my-carousel a[href^='#']");
+    if (!(link instanceof HTMLAnchorElement)) return;
+    const id = link.getAttribute("href")?.slice(1);
+    if (!id) return;
+    const slide = document.getElementById(id);
+    if (!slide) return;
+    event.preventDefault();
+    slide.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "start" });
+  });
+</script>
