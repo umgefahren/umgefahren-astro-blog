@@ -78,8 +78,18 @@ async function encodeJxl(
   return { data, format: 'jxl' };
 }
 
+const extraInputFormats = ['heic', 'heif'];
+
 const service: LocalImageService = {
   ...sharpService,
+  validateOptions(options: any, imageConfig: any) {
+    if (options.src?.format && extraInputFormats.includes(options.src.format)) {
+      const patched = { ...options, src: { ...options.src, format: 'jpg' as const } };
+      const validated = sharpService.validateOptions!(patched, imageConfig);
+      return { ...validated, src: options.src };
+    }
+    return sharpService.validateOptions!(options, imageConfig);
+  },
   async transform(inputBuffer, transformOptions, config) {
     if (transformOptions.format === 'jxl') {
       return encodeJxl(inputBuffer, transformOptions as Parameters<typeof encodeJxl>[1]);

@@ -3,6 +3,7 @@ import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 import svelte, { vitePreprocess } from "@astrojs/svelte";
+import { heicImportPlugin } from './src/image-service/heic-import-plugin';
 import remarkGfm from 'remark-gfm'
 import smartypants from 'remark-smartypants'
 import emoji from 'remark-emoji'
@@ -19,7 +20,7 @@ export default defineConfig({
   site: 'https://umgefahren.xyz',
   integrations: [mdx(), sitemap(), svelte({ preprocess: vitePreprocess({ script: true }) })],
   vite: {
-    plugins: [tailwindcss()],
+    plugins: [heicImportPlugin(), tailwindcss()],
     build: {
       // maplibre-gl is ~1MB and is already isolated in its own chunk via
       // dynamic import in FlightMap; the warning is purely informational.
