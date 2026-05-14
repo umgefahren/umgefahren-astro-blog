@@ -38,17 +38,17 @@ I later discovered, that a modified version of Double Ratchet would, in fact, so
 
 I first learned about [Kademlia Distributed Hash Tables](https://en.wikipedia.org/wiki/Kademlia) in early December of 2020 and it took me actually some time until I realised how many problems it solved for me.
 If you are unaware of Kademlia, I would encourage you to take a look at it, because it is a computer science masterpiece but I will give a short breakdown here. Kademlia is a technique that powers most
-modern P2P systems. It first appeared in the (in-)famous Bittorrent protocol and was key for its success. While previous P2P filesharing services needed a central database of all file locations, 
+modern P2P systems. It first appeared in the (in)famous BitTorrent protocol and was key for its success. While previous P2P filesharing services needed a central database of all file locations, 
 Kademlia allows to address file **locations** through a distributed hash table that has, despite not being central, excellent properties.
 
 It works like that:
-Every node in a Dht (abbreviation for Distributed Hash Table) is assigned a unique identifier. Typically this is just a bitstring, that has ideally some relation to the node. In Libp2p (and thus IPFS) 
+Every node in a DHT (abbreviation for Distributed Hash Table) is assigned a unique identifier. Typically this is just a bitstring, that has ideally some relation to the node. In libp2p (and thus IPFS) 
 it's a hash of the node's public key. When the node joins the network it sends its unique identifier. The peer node, in turn, performs a lookup in a local index of all nodes this node knows. It
 returns the node and the node address, where the distance between the returned nodes and the asking node's unique identifier is minimal. The distance function can be arbitrary here, but it's important,
 that it's fast and well-defined. Typically it's just an XOR between the two. The asking node now contacts the returned node and repeats the process, until there is no better fit. It now places
 itself at that location.
 
-If a node wants to store something in the Dht, it generates a unique identifier for the piece of content it wants to store. The "saving node" now repeats the previously described process of finding
+If a node wants to store something in the DHT, it generates a unique identifier for the piece of content it wants to store. The "saving node" now repeats the previously described process of finding
 the closest node, to save the key-value-pair at the node with the least distance to the key.
 
 The exact details of how routing is performed, discovery is handled and resiliency is implemented is somewhat complex in detail, but the principle is rather elegantly simple. It allows to store,
@@ -61,19 +61,19 @@ when messages were lost. However, as previously stated, it's not that simple to 
 
 During research for a Rust implementation of Kademlia I encountered libp2p pretty early, but thought it was too complex and dismissed it. However it would turn out to be my life-saver. This was in January 2021.
 
-What is libp2p? [Libp2p](https://libp2p.io) is a lower level framework for writing P2P applications. It was developed at and by [Protocol Labs](https://protocol.ai) for [IPFS](https://ipfs.io) but
+What is libp2p? [libp2p](https://libp2p.io) is a lower level framework for writing P2P applications. It was developed at and by [Protocol Labs](https://protocol.ai) for [IPFS](https://ipfs.io) but
 was decoupled from IPFS and is now developed somewhat separately from IPFS. It defines a lot of protocols and behaviours necessary in P2P systems but also handles things like network IO.
-There are several implementations of Libp2p. The most important one is the Go implementation, closely followed by the JavaScript and Rust implementations. The Go and JavaScript ones are primarily
+There are several implementations of libp2p. The most important one is the Go implementation, closely followed by the JavaScript and Rust implementations. The Go and JavaScript ones are primarily
 driven by Protocol Labs themselves, where the Rust implementation is a slightly separate effort, primarily driven by the developers of [Substrate](https://substrate.io) a very powerful blockchain
 framework responsible for Polkadot and funded by the Web3 Foundation.
 
-Libp2p.rs meant for me, that I could solve a lot of complex problems quickly with Libp2p without having to worry about the weeds of it. However this is not that easy, because libp2p in general and 
+libp2p.rs meant for me, that I could solve a lot of complex problems quickly with libp2p without having to worry about the weeds of it. However this is not that easy, because libp2p in general and 
 the Rust implementation specifically suffer from a lot of problems.
 
 Because the implementation is quite old, it doesn't embrace Async Rust that much (which is admittedly still very hard considering the problems with Async Traits) and therefore it has a very strange
 and unintuitive *way* of doing things which takes a lot of time to understand and makes it ugly to work with. Let me give an example.
 
-Consider you want to use the Kademlia module of Libp2p and put values into your Dht and retrieve them afterwards.
+Consider you want to use the Kademlia module of libp2p and put values into your DHT and retrieve them afterwards.
 
 First you have to define something called a Swarm Behaviour. This includes the protocols you want to use and a predefined Out Event, where all *events* get emitted to.
 In the dione implementation this snippet looks like this:
@@ -162,22 +162,22 @@ async fn handle_event(
 ```
 You can see this is a lot of very ugly Rust boilerplate you have to write to perform basic tasks. I will omit the `handle_command` function here, but you'll get the idea. This is not only very ugly
 to write, it also performs horribly, because commands to the swarm are issued very, very frequently and every time this results in a memory allocation for the oneshot channel. The complete code is 
-also not very performant. I suspect that Libp2p is to blame here.
+also not very performant. I suspect that libp2p is to blame here.
 
-To make matters worse, Libp2p is not well documented. Some modules lack any documentation and the implementations vary a lot, so you basically are left to ask a lot of questions. Atypically for 
+To make matters worse, libp2p is not well documented. Some modules lack any documentation and the implementations vary a lot, so you basically are left to ask a lot of questions. Atypically for 
 a Rust crate, the docs.rs of libp2p are also not very self explanatory, which is unusual for Rust crates.
 
 But I don't want to rant here. It actually enabled me to build this whole project, so I'm very grateful.
 
 ## Solving a big problem
 
-During the time I wrote my Abitur, actually three days prior to the Math exam, I implemented Double-Ratchet and X3DH with P-256 and published it on crates.io. It helped me understand everything
+During the time I wrote my Abitur (German high school diploma), actually three days prior to the Math exam, I implemented Double-Ratchet and X3DH with P-256 and published it on crates.io. It helped me understand everything
 better and also how to write good Rust code.
 
-After I graduated, when visiting my school for the last time, I had an epiphany: Double-Ratchet can be used to place messages in the Distributed Hashtable. If you use the output of Double Ratchet not
+After I graduated, when visiting my school for the last time, I had an epiphany: Double-Ratchet can be used to place messages in the Distributed Hash Table. If you use the output of Double Ratchet not
 to encrypt a message, but instead use the bitstring as the key for a key-value pair, you can place packages in a peer-to-peer net with perfect forward secrecy and without breaking when losing messages
 (however the Diffie-Hellmans are a problem but this can be solved). This idea was my breakthrough idea. I wrote the whole dione messaging system in my summer break, before going to university. 
-It's about 7.000 lines of Rust code and you can actually visit it on [GitHub](https://github.com/Dione-Software/dione)! At the time of writing it is outdated, but it should still work!
+It's about 7k lines of Rust code and you can actually visit it on [GitHub](https://github.com/Dione-Software/dione)! At the time of writing it is outdated, but it should still work!
 
 I finished just a couple of days before I moved to Zurich, knowing that I actually succeeded. However the code should be considered a prototype. It barely works, it is not reliable and it's horribly
 designed. I also chose a server-client pattern, which is actually not necessary but easier to implement. There was also a short time period where I deployed it on servers around the globe; it worked for
