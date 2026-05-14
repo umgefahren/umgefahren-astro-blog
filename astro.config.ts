@@ -39,30 +39,44 @@ export default defineConfig({
       emoji,
     ],
     rehypePlugins: [
-      slug,
-      () => {
-        const slugs = new GitHubSlugger()
-        return (tree) => {
-          visit(tree, 'element', (node) => {
-            if (node.tagName.startsWith('h') && node.properties.id === '') {
-              const child = node.children.at(0)
-              if (child?.type === 'element') {
-                const hoverForHangul = child.children.at(0)
-                const attributes = hoverForHangul?.attributes
-                try {
-                  attributes.forEach(({ name, value }) => {
-                    if (name === 'roman') {
-                      const slug = slugs.slug(value)
-                      node.properties.id += slug
-                    }
-                  })
-                } catch {
-                }
-              }
+      // Compute heading IDs that look at <HoverForHangul roman="..." />.
+      // rehype-slug alone gives empty/garbage IDs for headings whose visible
+      // text is a JSX component, since those nodes have no text content at
+      // rehype time. We walk each heading, build a slug source from text +
+      // 'roman' attributes, then set node.properties.id so rehype-slug becomes
+      // a no-op for these. rehype-slug stays in the chain as a fallback for
+      // headings without JSX.
+      () => (tree: any) => {
+        const slugs = new GitHubSlugger();
+        const headingText = (node: any): string => {
+          const parts: string[] = [];
+          for (const child of node.children ?? []) {
+            if (child.type === 'text') {
+              parts.push(child.value);
+            } else if (
+              child.type === 'mdxJsxTextElement' ||
+              child.type === 'mdxJsxFlowElement'
+            ) {
+              const roman = child.attributes?.find?.(
+                (a: any) => a.type === 'mdxJsxAttribute' && a.name === 'roman',
+              )?.value;
+              if (typeof roman === 'string') parts.push(roman);
+            } else if (child.children) {
+              parts.push(headingText(child));
             }
-          })
-        }
+          }
+          return parts.join(' ').replace(/\s+/g, ' ').trim();
+        };
+        visit(tree, 'element', (node: any) => {
+          if (!node.tagName?.startsWith?.('h')) return;
+          if (node.properties?.id === 'footnote-label') return;
+          const text = headingText(node);
+          if (!text) return;
+          node.properties = node.properties ?? {};
+          node.properties.id = slugs.slug(text);
+        });
       },
+      slug,
       [rehypeAutolinkHeadings, {
         behavior: 'prepend', content: (((a) => {
           if (a.type !== 'element') return []
