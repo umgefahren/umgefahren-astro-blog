@@ -2,7 +2,7 @@ import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
-import svelte from "@astrojs/svelte";
+import svelte, { vitePreprocess } from "@astrojs/svelte";
 import remarkGfm from 'remark-gfm'
 import smartypants from 'remark-smartypants'
 import emoji from 'remark-emoji'
@@ -17,7 +17,7 @@ import rehypeExternalLinks from 'rehype-external-links'
 export default defineConfig({
   prefetch: true,
   site: 'https://umgefahren.xyz',
-  integrations: [mdx(), sitemap(), svelte()],
+  integrations: [mdx(), sitemap(), svelte({ preprocess: vitePreprocess({ script: true }) })],
   vite: {
     plugins: [tailwindcss()],
     build: {
