@@ -8,7 +8,7 @@ type Props = {
 
 function getFormats(): string[] {
   if (import.meta.env.DEV) return ["webp"];
-  if (import.meta.env.PROD) return ["heif", "avif", "webp"];
+  if (import.meta.env.PROD) return ["jxl", "avif", "webp"];
   return [];
 }
 

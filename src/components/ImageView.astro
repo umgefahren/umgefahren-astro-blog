@@ -1,6 +1,6 @@
 ---
 import { ExifTool, type Tags } from "exiftool-vendored";
-import { Picture } from "astro-imagetools/components";
+import { Picture } from "astro:assets";
 import ShutterSpeed from "./ShutterSpeed.svelte";
 
 export interface Props {
@@ -14,27 +14,18 @@ const { image, alt, height, width } = Astro.props;
 
 const elementId = crypto.randomUUID();
 
-let path = "";
-if (image.src.startsWith("/_astro/")) {
-  path = `../..${image.src}`;
-} else if (image.src.startsWith("/assets")) {
-  path = `./dist${image.src}`;
-} else {
-  const REGEXP = /\/@fs(.*)\?.*/;
-  path = REGEXP.exec(image.src)![1]!;
+const fsPath = (image as ImageMetadata & { fsPath?: string }).fsPath;
+if (!fsPath) {
+  throw new Error(`ImageView: cannot resolve fsPath for ${image.src}`);
 }
-
-const reader = new ExifTool();
-const tags = await reader.read(path);
-await reader.end();
 
 const breakPoints = [
   400, 640, 800, 1024, 1280, 1440, 1920, 2560, 2880, 3840,
 ].filter((val) => val <= image.width);
 
-if (image.width > 3840) {
-  breakPoints.push(image.width);
-}
+const reader = new ExifTool();
+const tags = await reader.read(fsPath);
+await reader.end();
 
 interface ExifData {
   camera?: string;
@@ -100,25 +91,14 @@ const exifData = extractData(tags);
   <div class="container" id={elementId}>
     <div class="image">
       <Picture
-        src={path}
+        src={image}
         alt={alt}
-        placeholder="blurred"
-        format={["heif", "avif", "webp"]}
+        formats={["jxl", "avif", "webp"]}
         fallbackFormat="jpg"
-        includeSourceFormat={false}
-        w={width ?? image.width}
-        h={height ?? image.height}
-        breakpoints={breakPoints}
-        formatOptions={{
-          heif: {
-            quality: 90,
-            depth: 12,
-          },
-          avif: {
-            quailty: 90,
-            depth: 12,
-          }
-        }}
+        widths={breakPoints}
+        width={width ?? image.width}
+        height={height ?? image.height}
+        quality="high"
       />
     </div>
     <h3 class="subtitle text-slate-900 dark:text-slate-300">

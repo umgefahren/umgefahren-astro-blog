@@ -2,7 +2,6 @@ import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import tailwind from "@astrojs/tailwind";
-import { astroImageTools } from 'astro-imagetools';
 import svelte from "@astrojs/svelte";
 import solidJs from "@astrojs/solid-js";
 import remarkGfm from 'remark-gfm'
@@ -19,7 +18,10 @@ import rehypeExternalLinks from 'rehype-external-links'
 export default defineConfig({
   prefetch: true,
   site: 'https://umgefahren.xyz',
-  integrations: [mdx(), sitemap(), tailwind(), svelte(), astroImageTools, solidJs()],
+  integrations: [mdx(), sitemap(), tailwind(), svelte(), solidJs()],
+  image: {
+    service: { entrypoint: './src/image-service/jxl-sharp.ts' },
+  },
   build: {
     assets: "assets"
   },
