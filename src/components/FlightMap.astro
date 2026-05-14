@@ -61,7 +61,7 @@ const endAirportPosition = [
           type: "geojson",
           data: {
             type: "Feature",
-            geometry: { type: "Polygon", coordinates: [coordinates as any] },
+            geometry: { type: "LineString", coordinates },
             properties: {},
           },
         });
@@ -73,10 +73,14 @@ const endAirportPosition = [
           paint: { "line-color": "purple", "line-width": 2 },
         });
 
-        map.fitBounds(
-          [coordinates[0][0], coordinates[0][1], coordinates[1][0], coordinates[1][1]],
-          { speed: Number.MAX_VALUE, padding: 50 }
-        );
+        // Build a proper SW/NE bbox from the two endpoints. Just handing
+        // MapLibre [start, end] gives a degenerate bbox whenever start isn't
+        // already south-west of end (e.g. GMP -> CJU, where GMP is both north
+        // and east of CJU), which silently falls back to the default view.
+        const [a, b] = coordinates;
+        const sw: [number, number] = [Math.min(a[0], b[0]), Math.min(a[1], b[1])];
+        const ne: [number, number] = [Math.max(a[0], b[0]), Math.max(a[1], b[1])];
+        map.fitBounds([sw, ne], { padding: 50, duration: 0 });
       });
     }
   }
